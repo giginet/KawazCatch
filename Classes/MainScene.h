@@ -17,6 +17,7 @@ public:
     static cocos2d::Scene* createScene();
     bool init();
     CREATE_FUNC(MainScene);
+    CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);
 };
 
 #endif /* defined(__KawazCatch__MainScene__) */
