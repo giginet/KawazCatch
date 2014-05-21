@@ -16,6 +16,7 @@ class MainScene :public cocos2d::Layer
 public:
     static cocos2d::Scene* createScene();
     bool init();
+    virtual ~MainScene();
     CREATE_FUNC(MainScene);
     CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);
 };
