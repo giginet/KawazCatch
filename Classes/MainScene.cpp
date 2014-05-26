@@ -12,6 +12,7 @@
 USING_NS_CC;
 
 const int FRUIT_TOP_MERGIN = 40;
+const float TIME_LIMIT_SECOND = 60;
 
 Scene* MainScene::createScene()
 {
@@ -28,6 +29,7 @@ bool MainScene::init()
     }
     
     _score = 0;
+    _second = TIME_LIMIT_SECOND;
     
     auto director = Director::getInstance();
     auto size = director->getWinSize();
@@ -58,23 +60,41 @@ bool MainScene::init()
     scoreLabel->enableShadow();
     scoreLabel->enableOutline(Color4B::RED, 5);
     this->setScoreLabel(scoreLabel);
-    _scoreLabel->setPosition(Point(size.width / 2.0, size.height - 60));
+    _scoreLabel->setPosition(Point(size.width / 2.0 * 1.5, size.height - 60));
     this->addChild(_scoreLabel);
     
+    // タイマーラベルの追加
+    auto timerLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 64);
+    timerLabel->enableShadow();
+    timerLabel->enableOutline(Color4B::RED, 5);
+    this->setTimerLabel(timerLabel);
+    _timerLabel->setPosition(Point(size.width / 2.0, size.height - 60));
+    this->addChild(_timerLabel);
     this->scheduleUpdate();
+    
+    _lot = 0;
+    std::random_device rdev;
+    _engine.seed(rdev());
     
     return true;
 }
 
 MainScene::~MainScene()
 {
+    CC_SAFE_RELEASE_NULL(_timerLabel);
     CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_player);
 }
 
 void MainScene::update(float dt)
 {
-    this->addFruit();
+    if (_second > 0 && _lot == 0) {
+        std::binomial_distribution<> dest(_second * 2.0, 0.5);
+        _lot = dest(_engine);
+        this->addFruit();
+    } else {
+        --_lot;
+    }
     
     for (auto fruit : _fruits) {
         auto busketPosition = _player->getPosition() - Point(0, 10);
@@ -84,16 +104,16 @@ void MainScene::update(float dt)
         }
     }
     _scoreLabel->setString(std::to_string(_score));
+    _second -= dt;
+    _timerLabel->setString(std::to_string((int)_second));
 }
 
 Sprite* MainScene::addFruit()
 {
-    std::random_device rdev;
-    std::mt19937 engine(rdev());
     std::uniform_int_distribution<> dist(0, (int)FruitType::COUNT - 1);
     
     auto winSize = Director::getInstance()->getWinSize();
-    int fruitNumber = dist(engine);
+    int fruitNumber = dist(_engine);
     
     std::string filename = "fruit" + std::to_string(fruitNumber) + ".png";
     auto fruit = Sprite::create(filename);
@@ -102,7 +122,7 @@ Sprite* MainScene::addFruit()
     float min = fruitSize.width / 2.0;
     float max = winSize.width - fruitSize.width / 2.0;
     std::uniform_int_distribution<float> posDist(min, max);
-    float fruitXPos = posDist(engine);
+    float fruitXPos = posDist(_engine);
     
     fruit->setUserData((void *)fruitNumber);
     fruit->setPosition(Point(fruitXPos, winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
@@ -113,7 +133,6 @@ Sprite* MainScene::addFruit()
     fruit->runAction(Sequence::create(MoveTo::create(3.0, ground),
                                       RemoveSelf::create(),
                                       NULL));
-    
     return fruit;
 }
 
