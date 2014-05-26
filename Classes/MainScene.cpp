@@ -31,7 +31,7 @@ bool MainScene::init()
     this->addChild(background);
     
     this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Point(size.width / 2.0, 30));
+    _player->setPosition(Point(size.width / 2.0, 70));
     this->addChild(_player);
     
     auto listener = EventListenerTouchOneByOne::create();
