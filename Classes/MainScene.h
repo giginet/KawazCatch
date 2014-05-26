@@ -14,9 +14,21 @@
 class MainScene :public cocos2d::Layer
 {
 public:
+    /// フルーツの種類を表します
+    enum class FruitType
+    {
+        /// リンゴ
+        APPLE,
+        /// ぶどう
+        GRAPE,
+        /// 最大値
+        COUNT
+    };
+
     static cocos2d::Scene* createScene();
-    bool init();
+    bool init() override;
     virtual ~MainScene();
+    void update(float dt);
     CREATE_FUNC(MainScene);
     CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
     CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);

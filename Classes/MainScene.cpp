@@ -7,8 +7,11 @@
 //
 
 #include "MainScene.h"
+#include <random>
 
 USING_NS_CC;
+
+const int FRUIT_TOP_MERGIN = 40;
 
 Scene* MainScene::createScene()
 {
@@ -48,10 +51,42 @@ bool MainScene::init()
     };
     director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
+    this->scheduleUpdate();
+    
     return true;
 }
 
 MainScene::~MainScene()
 {
     CC_SAFE_RELEASE_NULL(_player);
+}
+
+void MainScene::update(float dt)
+{
+    this->addFruit();
+}
+
+Sprite* MainScene::addFruit()
+{
+    std::random_device rdev;
+    std::mt19937 engine(rdev());
+    std::uniform_int_distribution<> dist(0, (int)FruitType::COUNT - 1);
+    
+    auto winSize = Director::getInstance()->getWinSize();
+    int fruitNumber = dist(engine);
+    
+    std::string filename = "fruit" + std::to_string(fruitNumber) + ".png";
+    auto fruit = Sprite::create(filename);
+    
+    auto fruitSize = fruit->getContentSize();
+    float min = fruitSize.width / 2.0;
+    float max = winSize.width - fruitSize.width / 2.0;
+    std::uniform_int_distribution<float> posDist(min, max);
+    float fruitXPos = posDist(engine);
+    
+    fruit->setUserData((void *)fruitNumber);
+    fruit->setPosition(Point(fruitXPos, winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
+    this->addChild(fruit);
+    _fruits.pushBack(fruit);
+    return fruit;
 }
