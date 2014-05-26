@@ -27,6 +27,8 @@ bool MainScene::init()
         return false;
     }
     
+    _score = 0;
+    
     auto director = Director::getInstance();
     auto size = director->getWinSize();
     auto background = Sprite::create("background.png");
@@ -51,6 +53,14 @@ bool MainScene::init()
     };
     director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
+    // スコアラベルの追加
+    auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Helvetica", 64);
+    scoreLabel->enableShadow();
+    scoreLabel->enableOutline(Color4B::RED, 5);
+    this->setScoreLabel(scoreLabel);
+    _scoreLabel->setPosition(Point(size.width / 2.0, size.height - 60));
+    this->addChild(_scoreLabel);
+    
     this->scheduleUpdate();
     
     return true;
@@ -58,6 +68,7 @@ bool MainScene::init()
 
 MainScene::~MainScene()
 {
+    CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_player);
 }
 
@@ -72,6 +83,7 @@ void MainScene::update(float dt)
             this->catchFruit(fruit);
         }
     }
+    _scoreLabel->setString(std::to_string(_score));
 }
 
 Sprite* MainScene::addFruit()
@@ -109,4 +121,5 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
 {
     fruit->removeFromParent();
     _fruits.eraseObject(fruit);
+    _score += 1;
 }
