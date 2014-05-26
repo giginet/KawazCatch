@@ -36,6 +36,10 @@ private:
     /// フルーツを新たに生成して、生成したフルーツを返します
     /// @return 新たに作成されたフルーツ
     cocos2d::Sprite* addFruit();
+    
+    /// フルーツを取得します
+    /// @param Sprite* 取得するフルーツ
+    void catchFruit(cocos2d::Sprite* fruit);
 };
 
 #endif /* defined(__KawazCatch__MainScene__) */

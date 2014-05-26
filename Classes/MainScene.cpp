@@ -64,6 +64,14 @@ MainScene::~MainScene()
 void MainScene::update(float dt)
 {
     this->addFruit();
+    
+    for (auto fruit : _fruits) {
+        auto busketPosition = _player->getPosition() - Point(0, 10);
+        bool isHit = fruit->getBoundingBox().containsPoint(busketPosition);
+        if (isHit) {
+            this->catchFruit(fruit);
+        }
+    }
 }
 
 Sprite* MainScene::addFruit()
@@ -88,5 +96,17 @@ Sprite* MainScene::addFruit()
     fruit->setPosition(Point(fruitXPos, winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
     this->addChild(fruit);
     _fruits.pushBack(fruit);
+    
+    auto ground = Point(fruitXPos, 0);
+    fruit->runAction(Sequence::create(MoveTo::create(3.0, ground),
+                                      RemoveSelf::create(),
+                                      NULL));
+    
     return fruit;
+}
+
+void MainScene::catchFruit(cocos2d::Sprite *fruit)
+{
+    fruit->removeFromParent();
+    _fruits.eraseObject(fruit);
 }
