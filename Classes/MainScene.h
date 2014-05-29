@@ -42,6 +42,8 @@ public:
         READY,
         /// ゲーム中
         PLAYING,
+        /// 終了演出中
+        ENDING,
         /// スコア表示
         RESULT
     };

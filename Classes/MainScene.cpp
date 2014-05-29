@@ -14,7 +14,7 @@ USING_NS_CC;
 /// マージン
 const int FRUIT_TOP_MERGIN = 40;
 /// 制限時間
-const float TIME_LIMIT_SECOND = 60;
+const float TIME_LIMIT_SECOND = 5;
 
 Scene* MainScene::createScene()
 {
@@ -113,6 +113,24 @@ void MainScene::update(float dt)
         if (_second < 0) {
             _state = GameState::RESULT;
         }
+    } else if (_state == GameState::RESULT) {
+        auto winSize = Director::getInstance()->getWinSize();
+        auto replayButton = MenuItemImage::create("replay_button.png",
+                                                  "replay_button_pressed.png",
+                                                  [this](Ref* ref) {
+                                                      // ボタンを押したときの処理
+                                                      auto scene = MainScene::createScene();
+                                                      Director::getInstance()->replaceScene(scene);
+                                                  });
+        auto titleButton = MenuItemImage::create("replay_button.png",
+                                                 "replay_button_pressed.png",
+                                                  [this](Ref* ref) {
+                                                      // ボタンを押したときの処理
+                                                  });
+        auto menu = Menu::create(replayButton, titleButton, NULL);
+        menu->alignItemsVerticallyWithPadding(30);
+        menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+        this->addChild(menu);
     }
 }
 
