@@ -119,7 +119,8 @@ void MainScene::update(float dt)
                                                       [this](Ref* ref) {
                                                           // ボタンを押したときの処理
                                                           auto scene = MainScene::createScene();
-                                                          Director::getInstance()->replaceScene(scene);
+                                                          auto transition = TransitionCrossFade::create(1.0, scene);
+                                                          Director::getInstance()->replaceScene(transition);
                                                       });
             // 「タイトルへ戻る」ボタン
             auto titleButton = MenuItemImage::create("replay_button.png",
