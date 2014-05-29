@@ -19,6 +19,12 @@
 		079EB60119330CE10081B1D4 /* fruit2.png in Resources */ = {isa = PBXBuildFile; fileRef = 079EB5FB19330CE10081B1D4 /* fruit2.png */; };
 		07D0957B1924B698002A294A /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07D095791924B698002A294A /* MainScene.cpp */; };
 		07D0957C1924B698002A294A /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07D095791924B698002A294A /* MainScene.cpp */; };
+		07FED97719346A260010BA35 /* fruit2.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97419346A260010BA35 /* fruit2.png */; };
+		07FED97819346A260010BA35 /* fruit2.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97419346A260010BA35 /* fruit2.png */; };
+		07FED97919346A260010BA35 /* fruit3.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97519346A260010BA35 /* fruit3.png */; };
+		07FED97A19346A260010BA35 /* fruit3.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97519346A260010BA35 /* fruit3.png */; };
+		07FED97B19346A260010BA35 /* fruit4.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97619346A260010BA35 /* fruit4.png */; };
+		07FED97C19346A260010BA35 /* fruit4.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97619346A260010BA35 /* fruit4.png */; };
 		1AC6FB1F180E996B004C840B /* libbox2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFF180E9839004C840B /* libbox2d Mac.a */; };
 		1AC6FB20180E996B004C840B /* libchipmunk Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFD180E9839004C840B /* libchipmunk Mac.a */; };
 		1AC6FB21180E996B004C840B /* libcocos2dx Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2dx Mac.a */; };
@@ -234,6 +240,9 @@
 		079EB5FB19330CE10081B1D4 /* fruit2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit2.png; sourceTree = "<group>"; };
 		07D095791924B698002A294A /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainScene.cpp; path = ../Classes/MainScene.cpp; sourceTree = "<group>"; };
 		07D0957A1924B698002A294A /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainScene.h; path = ../Classes/MainScene.h; sourceTree = "<group>"; };
+		07FED97419346A260010BA35 /* fruit2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit2.png; sourceTree = "<group>"; };
+		07FED97519346A260010BA35 /* fruit3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit3.png; sourceTree = "<group>"; };
+		07FED97619346A260010BA35 /* fruit4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit4.png; sourceTree = "<group>"; };
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
@@ -483,6 +492,9 @@
 				079EB5F919330CE10081B1D4 /* fruit0.png */,
 				079EB5FA19330CE10081B1D4 /* fruit1.png */,
 				079EB5FB19330CE10081B1D4 /* fruit2.png */,
+				07FED97419346A260010BA35 /* fruit2.png */,
+				07FED97519346A260010BA35 /* fruit3.png */,
+				07FED97619346A260010BA35 /* fruit4.png */,
 				079EB5F41932D5750081B1D4 /* player.png */,
 			);
 			name = Resources;
@@ -545,7 +557,7 @@
 				LastUpgradeCheck = 0500;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
-						DevelopmentTeam = MDDB52YB8L;
+						DevelopmentTeam = 2AWR7Z4WYE;
 					};
 				};
 			};
@@ -672,8 +684,11 @@
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
+				07FED97719346A260010BA35 /* fruit2.png in Resources */,
 				079EB5FE19330CE10081B1D4 /* fruit1.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
+				07FED97919346A260010BA35 /* fruit3.png in Resources */,
+				07FED97B19346A260010BA35 /* fruit4.png in Resources */,
 				079EB5FC19330CE10081B1D4 /* fruit0.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
@@ -688,11 +703,14 @@
 				5087E75317EB910900C73F5D /* CloseNormal.png in Resources */,
 				079EB5F61932D5750081B1D4 /* background.png in Resources */,
 				079EB5F81932D5750081B1D4 /* player.png in Resources */,
+				07FED97A19346A260010BA35 /* fruit3.png in Resources */,
 				079EB60119330CE10081B1D4 /* fruit2.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				5087E75417EB910900C73F5D /* CloseSelected.png in Resources */,
 				079EB5FD19330CE10081B1D4 /* fruit0.png in Resources */,
 				5087E75517EB910900C73F5D /* HelloWorld.png in Resources */,
+				07FED97819346A260010BA35 /* fruit2.png in Resources */,
+				07FED97C19346A260010BA35 /* fruit4.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -784,6 +802,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -804,6 +823,7 @@
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = "";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -815,6 +835,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -833,6 +854,7 @@
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = "";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";

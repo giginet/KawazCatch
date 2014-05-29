@@ -11,7 +11,9 @@
 
 USING_NS_CC;
 
+/// マージン
 const int FRUIT_TOP_MERGIN = 40;
+/// 制限時間
 const float TIME_LIMIT_SECOND = 60;
 
 Scene* MainScene::createScene()
@@ -29,7 +31,6 @@ bool MainScene::init()
     }
     
     _score = 0;
-    _second = TIME_LIMIT_SECOND;
     
     auto director = Director::getInstance();
     auto size = director->getWinSize();
@@ -38,7 +39,7 @@ bool MainScene::init()
     this->addChild(background);
     
     this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Point(size.width / 2.0, 70));
+    _player->setPosition(Point(size.width / 2.0, 220));
     this->addChild(_player);
     
     auto listener = EventListenerTouchOneByOne::create();
@@ -64,48 +65,55 @@ bool MainScene::init()
     this->addChild(_scoreLabel);
     
     // タイマーラベルの追加
-    auto timerLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 64);
-    timerLabel->enableShadow();
-    timerLabel->enableOutline(Color4B::RED, 5);
-    this->setTimerLabel(timerLabel);
-    _timerLabel->setPosition(Point(size.width / 2.0, size.height - 60));
-    this->addChild(_timerLabel);
+    _second = TIME_LIMIT_SECOND;
+    auto secondLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 64);
+    secondLabel->enableShadow();
+    secondLabel->enableOutline(Color4B::RED, 5);
+    secondLabel->setPosition(Point(size.width / 2.0, size.height - 60));
+    this->setSecondLabel(secondLabel);
+    this->addChild(_secondLabel);
     this->scheduleUpdate();
     
     _lot = 0;
     std::random_device rdev;
     _engine.seed(rdev());
     
+    _state = GameState::PLAYING;
+    
     return true;
 }
 
 MainScene::~MainScene()
 {
-    CC_SAFE_RELEASE_NULL(_timerLabel);
-    CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_player);
+    CC_SAFE_RELEASE_NULL(_scoreLabel);
+    CC_SAFE_RELEASE_NULL(_secondLabel);
 }
 
 void MainScene::update(float dt)
 {
-    if (_second > 0 && _lot == 0) {
-        std::binomial_distribution<> dest(_second * 2.0, 0.5);
-        _lot = dest(_engine);
-        this->addFruit();
-    } else {
-        --_lot;
-    }
-    
-    for (auto fruit : _fruits) {
-        auto busketPosition = _player->getPosition() - Point(0, 10);
-        bool isHit = fruit->getBoundingBox().containsPoint(busketPosition);
-        if (isHit) {
-            this->catchFruit(fruit);
+    if (_state == GameState::PLAYING) {
+        if (_second > 0 && _lot == 0) {
+            std::binomial_distribution<> dest(_second * 2.0, 0.5);
+            _lot = dest(_engine);
+            this->addFruit();
+        } else {
+            --_lot;
+        }
+        
+        for (auto fruit : _fruits) {
+            auto busketPosition = _player->getPosition() - Point(0, 10);
+            bool isHit = fruit->getBoundingBox().containsPoint(busketPosition);
+            if (isHit) {
+                this->catchFruit(fruit);
+            }
+        }
+        _second -= dt;
+        _secondLabel->setString(std::to_string((int)_second));
+        if (_second < 0) {
+            _state = GameState::RESULT;
         }
     }
-    _scoreLabel->setString(std::to_string(_score));
-    _second -= dt;
-    _timerLabel->setString(std::to_string((int)_second));
 }
 
 Sprite* MainScene::addFruit()
@@ -124,7 +132,6 @@ Sprite* MainScene::addFruit()
     std::uniform_int_distribution<float> posDist(min, max);
     float fruitXPos = posDist(_engine);
     
-    fruit->setUserData((void *)fruitNumber);
     fruit->setPosition(Point(fruitXPos, winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
     this->addChild(fruit);
     _fruits.pushBack(fruit);
@@ -141,4 +148,5 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
     fruit->removeFromParent();
     _fruits.eraseObject(fruit);
     _score += 1;
+    _scoreLabel->setString(std::to_string(_score));
 }
