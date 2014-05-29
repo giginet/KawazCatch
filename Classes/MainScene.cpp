@@ -112,25 +112,26 @@ void MainScene::update(float dt)
         _secondLabel->setString(std::to_string((int)_second));
         if (_second < 0) {
             _state = GameState::RESULT;
+            auto winSize = Director::getInstance()->getWinSize();
+            // 「もう一度遊ぶ」ボタン
+            auto replayButton = MenuItemImage::create("replay_button.png",
+                                                      "replay_button_pressed.png",
+                                                      [this](Ref* ref) {
+                                                          // ボタンを押したときの処理
+                                                          auto scene = MainScene::createScene();
+                                                          Director::getInstance()->replaceScene(scene);
+                                                      });
+            // 「タイトルへ戻る」ボタン
+            auto titleButton = MenuItemImage::create("replay_button.png",
+                                                     "replay_button_pressed.png",
+                                                     [this](Ref* ref) {
+                                                         // ボタンを押したときの処理
+                                                     });
+            auto menu = Menu::create(replayButton, titleButton, NULL);
+            menu->alignItemsVerticallyWithPadding(30);
+            menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+            this->addChild(menu);
         }
-    } else if (_state == GameState::RESULT) {
-        auto winSize = Director::getInstance()->getWinSize();
-        auto replayButton = MenuItemImage::create("replay_button.png",
-                                                  "replay_button_pressed.png",
-                                                  [this](Ref* ref) {
-                                                      // ボタンを押したときの処理
-                                                      auto scene = MainScene::createScene();
-                                                      Director::getInstance()->replaceScene(scene);
-                                                  });
-        auto titleButton = MenuItemImage::create("replay_button.png",
-                                                 "replay_button_pressed.png",
-                                                  [this](Ref* ref) {
-                                                      // ボタンを押したときの処理
-                                                  });
-        auto menu = Menu::create(replayButton, titleButton, NULL);
-        menu->alignItemsVerticallyWithPadding(30);
-        menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
-        this->addChild(menu);
     }
 }
 
