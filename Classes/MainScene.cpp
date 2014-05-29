@@ -7,6 +7,7 @@
 //
 
 #include "MainScene.h"
+#include "TitleScene.h"
 #include <random>
 
 USING_NS_CC;
@@ -54,7 +55,7 @@ bool MainScene::init()
         newPosition = newPosition.getClampPoint(Point(0, position.y), Point(size.width, position.y));
         _player->setPosition(newPosition); // 現在座標 + 移動量を新たな座標にする
     };
-    director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     // スコアラベルの追加
     auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Helvetica", 64);
@@ -123,10 +124,13 @@ void MainScene::update(float dt)
                                                           Director::getInstance()->replaceScene(transition);
                                                       });
             // 「タイトルへ戻る」ボタン
-            auto titleButton = MenuItemImage::create("replay_button.png",
-                                                     "replay_button_pressed.png",
+            auto titleButton = MenuItemImage::create("title_button.png",
+                                                     "title_button_pressed.png",
                                                      [this](Ref* ref) {
                                                          // ボタンを押したときの処理
+                                                         auto scene = TitleScene::createScene();
+                                                         auto transition = TransitionCrossFade::create(1.0, scene);
+                                                         Director::getInstance()->replaceScene(transition);
                                                      });
             auto menu = Menu::create(replayButton, titleButton, NULL);
             menu->alignItemsVerticallyWithPadding(30);

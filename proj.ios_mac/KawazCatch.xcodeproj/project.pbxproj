@@ -21,6 +21,12 @@
 		07A6D94A1936F9D700FE5043 /* replay_button_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A6D9471936F9D700FE5043 /* replay_button_pressed.png */; };
 		07A6D94B1936F9D700FE5043 /* replay_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A6D9481936F9D700FE5043 /* replay_button.png */; };
 		07A6D94C1936F9D700FE5043 /* replay_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 07A6D9481936F9D700FE5043 /* replay_button.png */; };
+		07A6D95119371EFA00FE5043 /* TitleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07A6D94F19371EFA00FE5043 /* TitleScene.cpp */; };
+		07A6D95219371EFA00FE5043 /* TitleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07A6D94F19371EFA00FE5043 /* TitleScene.cpp */; };
+		07C7A3631937265F00AC2BC7 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 07C7A3611937265F00AC2BC7 /* logo.png */; };
+		07C7A3641937265F00AC2BC7 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 07C7A3611937265F00AC2BC7 /* logo.png */; };
+		07C7A3651937265F00AC2BC7 /* title_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 07C7A3621937265F00AC2BC7 /* title_background.png */; };
+		07C7A3661937265F00AC2BC7 /* title_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 07C7A3621937265F00AC2BC7 /* title_background.png */; };
 		07D0957B1924B698002A294A /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07D095791924B698002A294A /* MainScene.cpp */; };
 		07D0957C1924B698002A294A /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07D095791924B698002A294A /* MainScene.cpp */; };
 		07FED97719346A260010BA35 /* fruit2.png in Resources */ = {isa = PBXBuildFile; fileRef = 07FED97419346A260010BA35 /* fruit2.png */; };
@@ -244,6 +250,10 @@
 		079EB5FB19330CE10081B1D4 /* fruit2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit2.png; sourceTree = "<group>"; };
 		07A6D9471936F9D700FE5043 /* replay_button_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = replay_button_pressed.png; sourceTree = "<group>"; };
 		07A6D9481936F9D700FE5043 /* replay_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = replay_button.png; sourceTree = "<group>"; };
+		07A6D94F19371EFA00FE5043 /* TitleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TitleScene.cpp; path = ../Classes/TitleScene.cpp; sourceTree = "<group>"; };
+		07A6D95019371EFA00FE5043 /* TitleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TitleScene.h; path = ../Classes/TitleScene.h; sourceTree = "<group>"; };
+		07C7A3611937265F00AC2BC7 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		07C7A3621937265F00AC2BC7 /* title_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title_background.png; sourceTree = "<group>"; };
 		07D095791924B698002A294A /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainScene.cpp; path = ../Classes/MainScene.cpp; sourceTree = "<group>"; };
 		07D0957A1924B698002A294A /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainScene.h; path = ../Classes/MainScene.h; sourceTree = "<group>"; };
 		07FED97419346A260010BA35 /* fruit2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit2.png; sourceTree = "<group>"; };
@@ -376,6 +386,8 @@
 				1AFAF8B616D35DE700DB1158 /* HelloWorldScene.h */,
 				07D095791924B698002A294A /* MainScene.cpp */,
 				07D0957A1924B698002A294A /* MainScene.h */,
+				07A6D94F19371EFA00FE5043 /* TitleScene.cpp */,
+				07A6D95019371EFA00FE5043 /* TitleScene.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -504,6 +516,8 @@
 				07FED97519346A260010BA35 /* fruit3.png */,
 				07FED97619346A260010BA35 /* fruit4.png */,
 				079EB5F41932D5750081B1D4 /* player.png */,
+				07C7A3611937265F00AC2BC7 /* logo.png */,
+				07C7A3621937265F00AC2BC7 /* title_background.png */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -681,6 +695,7 @@
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				1AFAF8BC16D35E4900DB1158 /* CloseNormal.png in Resources */,
+				07C7A3651937265F00AC2BC7 /* title_background.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
@@ -699,6 +714,7 @@
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				07FED97919346A260010BA35 /* fruit3.png in Resources */,
 				07FED97B19346A260010BA35 /* fruit4.png in Resources */,
+				07C7A3631937265F00AC2BC7 /* logo.png in Resources */,
 				079EB5FC19330CE10081B1D4 /* fruit0.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
@@ -717,9 +733,11 @@
 				07FED97A19346A260010BA35 /* fruit3.png in Resources */,
 				07A6D94C1936F9D700FE5043 /* replay_button.png in Resources */,
 				079EB60119330CE10081B1D4 /* fruit2.png in Resources */,
+				07C7A3661937265F00AC2BC7 /* title_background.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				5087E75417EB910900C73F5D /* CloseSelected.png in Resources */,
 				079EB5FD19330CE10081B1D4 /* fruit0.png in Resources */,
+				07C7A3641937265F00AC2BC7 /* logo.png in Resources */,
 				5087E75517EB910900C73F5D /* HelloWorld.png in Resources */,
 				07FED97819346A260010BA35 /* fruit2.png in Resources */,
 				07FED97C19346A260010BA35 /* fruit4.png in Resources */,
@@ -739,6 +757,7 @@
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
 				1AFAF8B816D35DE700DB1158 /* HelloWorldScene.cpp in Sources */,
 				07D0957B1924B698002A294A /* MainScene.cpp in Sources */,
+				07A6D95119371EFA00FE5043 /* TitleScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,6 +768,7 @@
 				5087E75717EB910900C73F5D /* AppDelegate.cpp in Sources */,
 				07D0957C1924B698002A294A /* MainScene.cpp in Sources */,
 				5087E75817EB910900C73F5D /* HelloWorldScene.cpp in Sources */,
+				07A6D95219371EFA00FE5043 /* TitleScene.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
