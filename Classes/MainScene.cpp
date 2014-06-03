@@ -37,6 +37,9 @@ bool MainScene::init()
     // 初期スコアの設定
     _score = 0;
     
+    // クラッシュ状態の設定
+    _isCrash = false;
+    
     // 背景を表示する
     auto director = Director::getInstance();
     auto size = director->getWinSize();
@@ -57,11 +60,13 @@ bool MainScene::init()
     };
     listener->onTouchMoved = [this, size](Touch* touch, Event* event) {
         // タッチ位置が動いたとき
-        Point delta = touch->getDelta(); // 前回とのタッチ位置との差をベクトルで取得する
-        Point position = _player->getPosition(); // 現在のかわずたんの座標を取得する
-        Point newPosition = position + delta;
-        newPosition = newPosition.getClampPoint(Point(0, position.y), Point(size.width, position.y));
-        _player->setPosition(newPosition); // 現在座標 + 移動量を新たな座標にする
+        if (!this->getIsCrash()) { // クラッシュしてないとき
+            Point delta = touch->getDelta(); // 前回とのタッチ位置との差をベクトルで取得する
+            Point position = _player->getPosition(); // 現在のかわずたんの座標を取得する
+            Point newPosition = position + delta;
+            newPosition = newPosition.getClampPoint(Point(0, position.y), Point(size.width, position.y));
+            _player->setPosition(newPosition); // 現在座標 + 移動量を新たな座標にする
+        }
     };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
@@ -142,7 +147,7 @@ void MainScene::update(float dt)
             finish->setScale(0);
             auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
             auto disappear = EaseExponentialIn::create(ScaleTo::create(0.25, 0));
-        
+            
             finish->runAction(Sequence::create(appear,
                                                DelayTime::create(0.5),
                                                disappear,
@@ -188,9 +193,20 @@ Sprite* MainScene::addFruit()
 
 void MainScene::catchFruit(cocos2d::Sprite *fruit)
 {
+    FruitType fruitType = (FruitType)fruit->getTag();
     fruit->removeFromParent();
     _fruits.eraseObject(fruit);
-    _score += 1;
+    switch (fruitType) {
+        case MainScene::FruitType::GOLDEN:
+            _score += 5;
+            break;
+        case MainScene::FruitType::BOMB:
+            this->onCatchBomb();
+            break;
+        default:
+            _score += 1;
+            break;
+    }
     _scoreLabel->setString(std::to_string(_score));
 }
 
@@ -203,8 +219,8 @@ void MainScene::addReadyLabel()
     ready->setPosition(center);
     this->addChild(ready);
     auto start = Sprite::create("start.png");
-    start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(1.0, 5.0), 0.5),
-                                                      FadeOut::create(1.0),
+    start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(0.5, 5.0), 0.5),
+                                                      FadeOut::create(0.5),
                                                       NULL),
                                       RemoveSelf::create(), NULL));
     start->setPosition(center);
@@ -246,4 +262,16 @@ void MainScene::addResultMenu()
     menu->alignItemsVerticallyWithPadding(30);
     menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
+}
+
+void MainScene::onCatchBomb()
+{
+    _isCrash = true; // クラッシュ状態
+    // ToDo アニメーション
+    _player->runAction(Sequence::create(DelayTime::create(3.0),
+                                        CallFunc::create([this] {
+        _isCrash = false;
+    }),
+                                        NULL));
+    _score = MAX(0, _score - 4); // 0未満になったら0点にする
 }
