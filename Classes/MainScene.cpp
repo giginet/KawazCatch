@@ -16,7 +16,9 @@ USING_NS_CC;
 /// マージン
 const int FRUIT_TOP_MERGIN = 40;
 /// 制限時間
-const float TIME_LIMIT_SECOND = 5;
+const float TIME_LIMIT_SECOND = 60;
+/// 落下速度
+const float FALLING_DURATION = 3.0;
 
 Scene* MainScene::createScene()
 {
@@ -114,7 +116,7 @@ void MainScene::update(float dt)
 {
     if (_state == GameState::PLAYING) {
         // PLAYING状態の時
-        if (_second > 0 && _lot == 0) {
+        if (_second > FALLING_DURATION && _lot == 0) {
             std::binomial_distribution<> dest(_second * 2.0, 0.5);
             _lot = dest(_engine);
             this->addFruit();
@@ -132,35 +134,26 @@ void MainScene::update(float dt)
         _second -= dt;
         _secondLabel->setString(std::to_string((int)_second));
         if (_second < 0) {
-            _state = GameState::RESULT;
-            
+            _state = GameState::ENDING;
+            // 終了文字の表示
+            auto finish = Sprite::create("finish.png");
+            auto winSize = Director::getInstance()->getWinSize();
+            finish->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+            finish->setScale(0);
+            auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
+            auto disappear = EaseExponentialIn::create(ScaleTo::create(0.25, 0));
+        
+            finish->runAction(Sequence::create(appear,
+                                               DelayTime::create(0.5),
+                                               disappear,
+                                               DelayTime::create(1.0),
+                                               CallFunc::create([this] {
+                _state = GameState::RESULT;
+                this->addResultMenu();
+            }),
+                                               NULL));
+            this->addChild(finish);
         }
-    } else if (_state == GameState::ENDING) {
-        // ENDING状態のとき
-        _state = GameState::RESULT;
-        auto winSize = Director::getInstance()->getWinSize();
-        // 「もう一度遊ぶ」ボタン
-        auto replayButton = MenuItemImage::create("replay_button.png",
-                                                  "replay_button_pressed.png",
-                                                  [this](Ref* ref) {
-                                                      // ボタンを押したときの処理
-                                                      auto scene = MainScene::createScene();
-                                                      auto transition = TransitionCrossFade::create(1.0, scene);
-                                                      Director::getInstance()->replaceScene(transition);
-                                                  });
-        // 「タイトルへ戻る」ボタン
-        auto titleButton = MenuItemImage::create("title_button.png",
-                                                 "title_button_pressed.png",
-                                                 [this](Ref* ref) {
-                                                     // ボタンを押したときの処理
-                                                     auto scene = TitleScene::createScene();
-                                                     auto transition = TransitionCrossFade::create(1.0, scene);
-                                                     Director::getInstance()->replaceScene(transition);
-                                                 });
-        auto menu = Menu::create(replayButton, titleButton, NULL);
-        menu->alignItemsVerticallyWithPadding(30);
-        menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
-        this->addChild(menu);
     }
 }
 
@@ -173,6 +166,7 @@ Sprite* MainScene::addFruit()
     
     std::string filename = "fruit" + std::to_string(fruitNumber) + ".png";
     auto fruit = Sprite::create(filename);
+    fruit->setTag(fruitNumber);
     
     auto fruitSize = fruit->getContentSize();
     float min = fruitSize.width / 2.0;
@@ -180,12 +174,13 @@ Sprite* MainScene::addFruit()
     std::uniform_int_distribution<float> posDist(min, max);
     float fruitXPos = posDist(_engine);
     
-    fruit->setPosition(Point(fruitXPos, winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
+    fruit->setPosition(Point(fruitXPos,
+                             winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
     this->addChild(fruit);
     _fruits.pushBack(fruit);
     
     auto ground = Point(fruitXPos, 0);
-    fruit->runAction(Sequence::create(MoveTo::create(3.0, ground),
+    fruit->runAction(Sequence::create(MoveTo::create(FALLING_DURATION, ground),
                                       RemoveSelf::create(),
                                       NULL));
     return fruit;
@@ -208,12 +203,12 @@ void MainScene::addReadyLabel()
     ready->setPosition(center);
     this->addChild(ready);
     auto start = Sprite::create("start.png");
-    start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(2.0, 5.0), 0.5),
-                                                      FadeOut::create(2.0),
+    start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(1.0, 5.0), 0.5),
+                                                      FadeOut::create(1.0),
                                                       NULL),
                                       RemoveSelf::create(), NULL));
     start->setPosition(center);
-    ready->runAction(Sequence::create(ScaleTo::create(0.5, 1),
+    ready->runAction(Sequence::create(ScaleTo::create(0.25, 1),
                                       DelayTime::create(1.0),
                                       CallFunc::create([this, start] {
         this->addChild(start);
@@ -222,4 +217,33 @@ void MainScene::addReadyLabel()
                                       RemoveSelf::create(),
                                       NULL));
     
+}
+
+void MainScene::addResultMenu()
+{
+    // ENDING状態のとき
+    _state = GameState::RESULT;
+    auto winSize = Director::getInstance()->getWinSize();
+    // 「もう一度遊ぶ」ボタン
+    auto replayButton = MenuItemImage::create("replay_button.png",
+                                              "replay_button_pressed.png",
+                                              [this](Ref* ref) {
+                                                  // 「もう一度遊ぶ」ボタンを押したときの処理
+                                                  auto scene = MainScene::createScene();
+                                                  auto transition = TransitionFade::create(0.5, scene);
+                                                  Director::getInstance()->replaceScene(transition);
+                                              });
+    // 「タイトルへ戻る」ボタン
+    auto titleButton = MenuItemImage::create("title_button.png",
+                                             "title_button_pressed.png",
+                                             [this](Ref* ref) {
+                                                 // 「タイトルへ戻る」ボタンを押したときの処理
+                                                 auto scene = TitleScene::createScene();
+                                                 auto transition = TransitionCrossFade::create(0.5, scene);
+                                                 Director::getInstance()->replaceScene(transition);
+                                             });
+    auto menu = Menu::create(replayButton, titleButton, NULL);
+    menu->alignItemsVerticallyWithPadding(30);
+    menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+    this->addChild(menu);
 }

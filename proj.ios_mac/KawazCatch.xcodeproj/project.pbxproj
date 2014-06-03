@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07312275193DE21D006203E7 /* title_button_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 07312273193DE21D006203E7 /* title_button_pressed.png */; };
+		07312276193DE21D006203E7 /* title_button_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 07312273193DE21D006203E7 /* title_button_pressed.png */; };
+		07312277193DE21D006203E7 /* title_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 07312274193DE21D006203E7 /* title_button.png */; };
+		07312278193DE21D006203E7 /* title_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 07312274193DE21D006203E7 /* title_button.png */; };
 		0743A3B5193DD05800542DAD /* finish.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B2193DD05800542DAD /* finish.png */; };
 		0743A3B6193DD05800542DAD /* finish.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B2193DD05800542DAD /* finish.png */; };
 		0743A3B7193DD05800542DAD /* ready.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B3193DD05800542DAD /* ready.png */; };
@@ -249,6 +253,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07312273193DE21D006203E7 /* title_button_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title_button_pressed.png; sourceTree = "<group>"; };
+		07312274193DE21D006203E7 /* title_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title_button.png; sourceTree = "<group>"; };
 		0743A3B2193DD05800542DAD /* finish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = finish.png; sourceTree = "<group>"; };
 		0743A3B3193DD05800542DAD /* ready.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ready.png; sourceTree = "<group>"; };
 		0743A3B4193DD05800542DAD /* start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = start.png; sourceTree = "<group>"; };
@@ -515,6 +521,8 @@
 				0743A3B2193DD05800542DAD /* finish.png */,
 				0743A3B3193DD05800542DAD /* ready.png */,
 				0743A3B4193DD05800542DAD /* start.png */,
+				07312273193DE21D006203E7 /* title_button_pressed.png */,
+				07312274193DE21D006203E7 /* title_button.png */,
 				07A6D9471936F9D700FE5043 /* replay_button_pressed.png */,
 				07A6D9481936F9D700FE5043 /* replay_button.png */,
 				1AFAF8B916D35E4900DB1158 /* CloseNormal.png */,
@@ -707,11 +715,13 @@
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
+				07312277193DE21D006203E7 /* title_button.png in Resources */,
 				1AFAF8BC16D35E4900DB1158 /* CloseNormal.png in Resources */,
 				07C7A3651937265F00AC2BC7 /* title_background.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
+				07312275193DE21D006203E7 /* title_button_pressed.png in Resources */,
 				1AFAF8BD16D35E4900DB1158 /* CloseSelected.png in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
@@ -753,12 +763,14 @@
 				07C7A3661937265F00AC2BC7 /* title_background.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				5087E75417EB910900C73F5D /* CloseSelected.png in Resources */,
+				07312276193DE21D006203E7 /* title_button_pressed.png in Resources */,
 				079EB5FD19330CE10081B1D4 /* fruit0.png in Resources */,
 				0743A3B6193DD05800542DAD /* finish.png in Resources */,
 				07C7A3641937265F00AC2BC7 /* logo.png in Resources */,
 				5087E75517EB910900C73F5D /* HelloWorld.png in Resources */,
 				07FED97819346A260010BA35 /* fruit2.png in Resources */,
 				07FED97C19346A260010BA35 /* fruit4.png in Resources */,
+				07312278193DE21D006203E7 /* title_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -76,6 +76,11 @@ private:
      */
     void addReadyLabel();
     
+    /**
+     * ゲーム終了後のメニューを追加します
+     */
+    void addResultMenu();
+    
     float _lot;
     std::mt19937 _engine;
 };
