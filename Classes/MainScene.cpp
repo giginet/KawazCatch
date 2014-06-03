@@ -9,6 +9,7 @@
 #include "MainScene.h"
 #include "TitleScene.h"
 #include <random>
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -31,24 +32,29 @@ bool MainScene::init()
         return false;
     }
     
+    // 初期スコアの設定
     _score = 0;
     
+    // 背景を表示する
     auto director = Director::getInstance();
     auto size = director->getWinSize();
     auto background = Sprite::create("background.png");
     background->setPosition(Point(size.width / 2.0, size.height / 2.0));
     this->addChild(background);
     
+    // プレイヤーを表示する
     this->setPlayer(Sprite::create("player.png"));
     _player->setPosition(Point(size.width / 2.0, 220));
     this->addChild(_player);
     
+    // イベントリスナーの追加
     auto listener = EventListenerTouchOneByOne::create();
     listener->onTouchBegan = [](Touch* touch, Event* event) {
-        log("Touch at (%f, %f)", touch->getLocation().x, touch->getLocation().y);
+        // タッチされたとき
         return true;
     };
     listener->onTouchMoved = [this, size](Touch* touch, Event* event) {
+        // タッチ位置が動いたとき
         Point delta = touch->getDelta(); // 前回とのタッチ位置との差をベクトルで取得する
         Point position = _player->getPosition(); // 現在のかわずたんの座標を取得する
         Point newPosition = position + delta;
@@ -79,21 +85,35 @@ bool MainScene::init()
     std::random_device rdev;
     _engine.seed(rdev());
     
-    _state = GameState::PLAYING;
+    // 初期状態をREADYにする
+    _state = GameState::READY;
     
     return true;
 }
 
 MainScene::~MainScene()
 {
+    // デストラクタ
     CC_SAFE_RELEASE_NULL(_player);
     CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_secondLabel);
 }
 
+void MainScene::onEnterTransitionDidFinish()
+{
+    // シーン遷移が完了したとき
+    Layer::onEnterTransitionDidFinish();
+    
+    // BGMを鳴らす
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
+    
+    this->addReadyLabel();
+}
+
 void MainScene::update(float dt)
 {
     if (_state == GameState::PLAYING) {
+        // PLAYING状態の時
         if (_second > 0 && _lot == 0) {
             std::binomial_distribution<> dest(_second * 2.0, 0.5);
             _lot = dest(_engine);
@@ -113,30 +133,34 @@ void MainScene::update(float dt)
         _secondLabel->setString(std::to_string((int)_second));
         if (_second < 0) {
             _state = GameState::RESULT;
-            auto winSize = Director::getInstance()->getWinSize();
-            // 「もう一度遊ぶ」ボタン
-            auto replayButton = MenuItemImage::create("replay_button.png",
-                                                      "replay_button_pressed.png",
-                                                      [this](Ref* ref) {
-                                                          // ボタンを押したときの処理
-                                                          auto scene = MainScene::createScene();
-                                                          auto transition = TransitionCrossFade::create(1.0, scene);
-                                                          Director::getInstance()->replaceScene(transition);
-                                                      });
-            // 「タイトルへ戻る」ボタン
-            auto titleButton = MenuItemImage::create("title_button.png",
-                                                     "title_button_pressed.png",
-                                                     [this](Ref* ref) {
-                                                         // ボタンを押したときの処理
-                                                         auto scene = TitleScene::createScene();
-                                                         auto transition = TransitionCrossFade::create(1.0, scene);
-                                                         Director::getInstance()->replaceScene(transition);
-                                                     });
-            auto menu = Menu::create(replayButton, titleButton, NULL);
-            menu->alignItemsVerticallyWithPadding(30);
-            menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
-            this->addChild(menu);
+            
         }
+    } else if (_state == GameState::ENDING) {
+        // ENDING状態のとき
+        _state = GameState::RESULT;
+        auto winSize = Director::getInstance()->getWinSize();
+        // 「もう一度遊ぶ」ボタン
+        auto replayButton = MenuItemImage::create("replay_button.png",
+                                                  "replay_button_pressed.png",
+                                                  [this](Ref* ref) {
+                                                      // ボタンを押したときの処理
+                                                      auto scene = MainScene::createScene();
+                                                      auto transition = TransitionCrossFade::create(1.0, scene);
+                                                      Director::getInstance()->replaceScene(transition);
+                                                  });
+        // 「タイトルへ戻る」ボタン
+        auto titleButton = MenuItemImage::create("title_button.png",
+                                                 "title_button_pressed.png",
+                                                 [this](Ref* ref) {
+                                                     // ボタンを押したときの処理
+                                                     auto scene = TitleScene::createScene();
+                                                     auto transition = TransitionCrossFade::create(1.0, scene);
+                                                     Director::getInstance()->replaceScene(transition);
+                                                 });
+        auto menu = Menu::create(replayButton, titleButton, NULL);
+        menu->alignItemsVerticallyWithPadding(30);
+        menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+        this->addChild(menu);
     }
 }
 
@@ -173,4 +197,29 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
     _fruits.eraseObject(fruit);
     _score += 1;
     _scoreLabel->setString(std::to_string(_score));
+}
+
+void MainScene::addReadyLabel()
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    auto center = Point(winSize.width / 2.0, winSize.height / 2.0);
+    auto ready = Sprite::create("ready.png");
+    ready->setScale(0);
+    ready->setPosition(center);
+    this->addChild(ready);
+    auto start = Sprite::create("start.png");
+    start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(2.0, 5.0), 0.5),
+                                                      FadeOut::create(2.0),
+                                                      NULL),
+                                      RemoveSelf::create(), NULL));
+    start->setPosition(center);
+    ready->runAction(Sequence::create(ScaleTo::create(0.5, 1),
+                                      DelayTime::create(1.0),
+                                      CallFunc::create([this, start] {
+        this->addChild(start);
+        _state = GameState::PLAYING;
+    }),
+                                      RemoveSelf::create(),
+                                      NULL));
+    
 }

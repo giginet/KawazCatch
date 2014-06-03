@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0743A3B5193DD05800542DAD /* finish.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B2193DD05800542DAD /* finish.png */; };
+		0743A3B6193DD05800542DAD /* finish.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B2193DD05800542DAD /* finish.png */; };
+		0743A3B7193DD05800542DAD /* ready.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B3193DD05800542DAD /* ready.png */; };
+		0743A3B8193DD05800542DAD /* ready.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B3193DD05800542DAD /* ready.png */; };
+		0743A3B9193DD05800542DAD /* start.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B4193DD05800542DAD /* start.png */; };
+		0743A3BA193DD05800542DAD /* start.png in Resources */ = {isa = PBXBuildFile; fileRef = 0743A3B4193DD05800542DAD /* start.png */; };
 		079EB5F51932D5750081B1D4 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 079EB5F31932D5750081B1D4 /* background.png */; };
 		079EB5F61932D5750081B1D4 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 079EB5F31932D5750081B1D4 /* background.png */; };
 		079EB5F71932D5750081B1D4 /* player.png in Resources */ = {isa = PBXBuildFile; fileRef = 079EB5F41932D5750081B1D4 /* player.png */; };
@@ -243,6 +249,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0743A3B2193DD05800542DAD /* finish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = finish.png; sourceTree = "<group>"; };
+		0743A3B3193DD05800542DAD /* ready.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ready.png; sourceTree = "<group>"; };
+		0743A3B4193DD05800542DAD /* start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = start.png; sourceTree = "<group>"; };
 		079EB5F31932D5750081B1D4 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		079EB5F41932D5750081B1D4 /* player.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player.png; sourceTree = "<group>"; };
 		079EB5F919330CE10081B1D4 /* fruit0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fruit0.png; sourceTree = "<group>"; };
@@ -503,6 +512,9 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0743A3B2193DD05800542DAD /* finish.png */,
+				0743A3B3193DD05800542DAD /* ready.png */,
+				0743A3B4193DD05800542DAD /* start.png */,
 				07A6D9471936F9D700FE5043 /* replay_button_pressed.png */,
 				07A6D9481936F9D700FE5043 /* replay_button.png */,
 				1AFAF8B916D35E4900DB1158 /* CloseNormal.png */,
@@ -691,6 +703,7 @@
 				079EB60019330CE10081B1D4 /* fruit2.png in Resources */,
 				079EB5F51932D5750081B1D4 /* background.png in Resources */,
 				07A6D94B1936F9D700FE5043 /* replay_button.png in Resources */,
+				0743A3B7193DD05800542DAD /* ready.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
@@ -704,6 +717,7 @@
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
 				1AFAF8BE16D35E4900DB1158 /* HelloWorld.png in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
+				0743A3B9193DD05800542DAD /* start.png in Resources */,
 				079EB5F71932D5750081B1D4 /* player.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				07A6D9491936F9D700FE5043 /* replay_button_pressed.png in Resources */,
@@ -717,6 +731,7 @@
 				07C7A3631937265F00AC2BC7 /* logo.png in Resources */,
 				079EB5FC19330CE10081B1D4 /* fruit0.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
+				0743A3B5193DD05800542DAD /* finish.png in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -726,10 +741,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				07A6D94A1936F9D700FE5043 /* replay_button_pressed.png in Resources */,
+				0743A3B8193DD05800542DAD /* ready.png in Resources */,
 				079EB5FF19330CE10081B1D4 /* fruit1.png in Resources */,
 				5087E75317EB910900C73F5D /* CloseNormal.png in Resources */,
 				079EB5F61932D5750081B1D4 /* background.png in Resources */,
 				079EB5F81932D5750081B1D4 /* player.png in Resources */,
+				0743A3BA193DD05800542DAD /* start.png in Resources */,
 				07FED97A19346A260010BA35 /* fruit3.png in Resources */,
 				07A6D94C1936F9D700FE5043 /* replay_button.png in Resources */,
 				079EB60119330CE10081B1D4 /* fruit2.png in Resources */,
@@ -737,6 +754,7 @@
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				5087E75417EB910900C73F5D /* CloseSelected.png in Resources */,
 				079EB5FD19330CE10081B1D4 /* fruit0.png in Resources */,
+				0743A3B6193DD05800542DAD /* finish.png in Resources */,
 				07C7A3641937265F00AC2BC7 /* logo.png in Resources */,
 				5087E75517EB910900C73F5D /* HelloWorld.png in Resources */,
 				07FED97819346A260010BA35 /* fruit2.png in Resources */,

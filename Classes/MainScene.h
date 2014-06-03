@@ -52,6 +52,7 @@ public:
     bool init() override;
     virtual ~MainScene();
     void update(float dt);
+    void onEnterTransitionDidFinish() override;
     CREATE_FUNC(MainScene);
     CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
     CC_SYNTHESIZE(int, _score, Score);
@@ -70,6 +71,11 @@ private:
      * @param Sprite* 取得するフルーツ
      */
     void catchFruit(cocos2d::Sprite* fruit);
+    
+    /** ゲーム開始の文字を追加します
+     */
+    void addReadyLabel();
+    
     float _lot;
     std::mt19937 _engine;
 };
