@@ -28,23 +28,26 @@ Scene* MainScene::createScene()
     return scene;
 }
 
+MainScene::MainScene() :
+_score(0),
+_isCrash(false),
+_lot(0),
+_second(0),
+_state(GameState::READY),
+_player(NULL),
+_secondLabel(NULL),
+_scoreLabel(NULL)
+{
+    // 乱数周りの初期化
+    std::random_device rdev;
+    _engine.seed(rdev());
+}
+
 bool MainScene::init()
 {
     if (!Layer::init()) {
         return false;
     }
-    
-    // 初期スコアの設定
-    _score = 0;
-    
-    // クラッシュ状態の設定
-    _isCrash = false;
-    
-    // 乱数周りの初期化
-    _lot = 0;
-    std::random_device rdev;
-    _engine.seed(rdev());
-    
     
     // 背景を表示する
     auto director = Director::getInstance();
@@ -86,17 +89,14 @@ bool MainScene::init()
     
     // タイマーラベルの追加
     _second = TIME_LIMIT_SECOND;
-    auto secondLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 32);
+    auto secondLabel = Label::createWithSystemFont(std::to_string(static_cast<int>(_second)), "Helvetica", 32);
     secondLabel->enableShadow();
     secondLabel->enableOutline(Color4B::RED, 2.5);
     secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 30));
     this->setSecondLabel(secondLabel);
     this->addChild(_secondLabel);
     this->scheduleUpdate();
-    
-    // 初期状態をREADYにする
-    _state = GameState::READY;
-    
+
     return true;
 }
 
@@ -143,7 +143,7 @@ void MainScene::update(float dt)
             }
         }
         _second -= dt;
-        _secondLabel->setString(std::to_string((int)_second));
+        _secondLabel->setString(std::to_string(static_cast<int>(_second)));
         if (_second < 0) {
             _state = GameState::ENDING;
             // 終了文字の表示
@@ -176,9 +176,9 @@ Sprite* MainScene::addFruit()
     int fruitType = 0;
     int r = this->generateRandom(100);
     if (r <= p) {
-        fruitType = (int)FruitType::GOLDEN;
+        fruitType = static_cast<int>(FruitType::GOLDEN);
     } else if (r <= p * 2) {
-        fruitType = (int)FruitType::BOMB;
+        fruitType = static_cast<int>(FruitType::BOMB);
     } else {
         fruitType = this->generateRandom(4);
     }
@@ -194,7 +194,7 @@ Sprite* MainScene::addFruit()
     float fruitXPos = posDist(_engine);
     
     fruit->setPosition(Vec2(fruitXPos,
-                             winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
+                            winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
     this->addChild(fruit);
     _fruits.pushBack(fruit);
     

@@ -20,6 +20,14 @@ Scene* TitleScene::createScene()
     return scene;
 }
 
+TitleScene::TitleScene()
+{
+}
+
+TitleScene::~TitleScene()
+{
+}
+
 bool TitleScene::init()
 {
     if (!Layer::init()) {
