@@ -36,12 +36,12 @@ bool Title::init()
     
     // ロゴの追加
     auto logo = Sprite::create("logo.png");
-    logo->setPosition(Vec2(winSize.width / 2.0, winSize.height - 300));
+    logo->setPosition(Vec2(winSize.width / 2.0, winSize.height - 150));
     this->addChild(logo);
     
     // Touch to Startの追加
-    auto touchToStart = Label::createWithSystemFont("Touch to Start", "Helvetica", 56);
-    touchToStart->setPosition(Vec2(winSize.width / 2.0, 150));
+    auto touchToStart = Label::createWithSystemFont("Touch to Start", "Helvetica", 28);
+    touchToStart->setPosition(Vec2(winSize.width / 2.0, 75));
     auto blink = Sequence::create(FadeTo::create(0.5, 127),
                                   FadeTo::create(0.5, 255),
                                   NULL);

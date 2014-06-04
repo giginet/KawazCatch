@@ -55,7 +55,7 @@ bool Main::init()
     
     // プレイヤーを表示する
     this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Vec2(size.width / 2.0, 220));
+    _player->setPosition(Vec2(size.width / 2.0, size.height - 455));
     this->addChild(_player);
     
     // イベントリスナーの追加
@@ -77,19 +77,19 @@ bool Main::init()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     // スコアラベルの追加
-    auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Helvetica", 64);
+    auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Helvetica", 32);
     scoreLabel->enableShadow();
-    scoreLabel->enableOutline(Color4B::RED, 5);
+    scoreLabel->enableOutline(Color4B::RED, 2.5);
     this->setScoreLabel(scoreLabel);
-    _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 60));
+    _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 30));
     this->addChild(_scoreLabel);
     
     // タイマーラベルの追加
     _second = TIME_LIMIT_SECOND;
-    auto secondLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 64);
+    auto secondLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 32);
     secondLabel->enableShadow();
-    secondLabel->enableOutline(Color4B::RED, 5);
-    secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 60));
+    secondLabel->enableOutline(Color4B::RED, 2.5);
+    secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 30));
     this->setSecondLabel(secondLabel);
     this->addChild(_secondLabel);
     this->scheduleUpdate();
@@ -277,7 +277,7 @@ void Main::addResultMenu()
                                                  Director::getInstance()->replaceScene(transition);
                                              });
     auto menu = Menu::create(replayButton, titleButton, NULL);
-    menu->alignItemsVerticallyWithPadding(30);
+    menu->alignItemsVerticallyWithPadding(15);
     menu->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
 }
