@@ -15,6 +15,10 @@ class TitleScene :public cocos2d::Layer
 {
 public:
     static cocos2d::Scene* createScene();
+    
+    TitleScene();
+    virtual ~TitleScene();
+    
     bool init() override;
     void onEnterTransitionDidFinish() override;
     CREATE_FUNC(TitleScene);

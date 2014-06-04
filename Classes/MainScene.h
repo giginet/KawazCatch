@@ -53,8 +53,11 @@ public:
     };
 
     static cocos2d::Scene* createScene();
-    bool init() override;
+    
+    MainScene();
     virtual ~MainScene();
+    
+    bool init() override;
     void update(float dt);
     void onEnterTransitionDidFinish() override;
     CREATE_FUNC(MainScene);
