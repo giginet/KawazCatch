@@ -50,12 +50,12 @@ bool Main::init()
     auto director = Director::getInstance();
     auto size = director->getWinSize();
     auto background = Sprite::create("background.png");
-    background->setPosition(Point(size.width / 2.0, size.height / 2.0));
+    background->setPosition(Vec2(size.width / 2.0, size.height / 2.0));
     this->addChild(background);
     
     // プレイヤーを表示する
     this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Point(size.width / 2.0, 220));
+    _player->setPosition(Vec2(size.width / 2.0, 220));
     this->addChild(_player);
     
     // イベントリスナーの追加
@@ -67,10 +67,10 @@ bool Main::init()
     listener->onTouchMoved = [this, size](Touch* touch, Event* event) {
         // タッチ位置が動いたとき
         if (!this->getIsCrash()) { // クラッシュしてないとき
-            Point delta = touch->getDelta(); // 前回とのタッチ位置との差をベクトルで取得する
-            Point position = _player->getPosition(); // 現在のかわずたんの座標を取得する
-            Point newPosition = position + delta;
-            newPosition = newPosition.getClampPoint(Point(0, position.y), Point(size.width, position.y));
+            Vec2 delta = touch->getDelta(); // 前回とのタッチ位置との差をベクトルで取得する
+            Vec2 position = _player->getPosition(); // 現在のかわずたんの座標を取得する
+            Vec2 newPosition = position + delta;
+            newPosition = newPosition.getClampPoint(Vec2(0, position.y), Vec2(size.width, position.y));
             _player->setPosition(newPosition); // 現在座標 + 移動量を新たな座標にする
         }
     };
@@ -81,7 +81,7 @@ bool Main::init()
     scoreLabel->enableShadow();
     scoreLabel->enableOutline(Color4B::RED, 5);
     this->setScoreLabel(scoreLabel);
-    _scoreLabel->setPosition(Point(size.width / 2.0 * 1.5, size.height - 60));
+    _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 60));
     this->addChild(_scoreLabel);
     
     // タイマーラベルの追加
@@ -89,7 +89,7 @@ bool Main::init()
     auto secondLabel = Label::createWithSystemFont(std::to_string((int)_second), "Helvetica", 64);
     secondLabel->enableShadow();
     secondLabel->enableOutline(Color4B::RED, 5);
-    secondLabel->setPosition(Point(size.width / 2.0, size.height - 60));
+    secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 60));
     this->setSecondLabel(secondLabel);
     this->addChild(_secondLabel);
     this->scheduleUpdate();
@@ -136,7 +136,7 @@ void Main::update(float dt)
         }
         
         for (auto fruit : _fruits) {
-            auto busketPosition = _player->getPosition() - Point(0, 10);
+            auto busketPosition = _player->getPosition() - Vec2(0, 10);
             bool isHit = fruit->getBoundingBox().containsPoint(busketPosition);
             if (isHit) {
                 this->catchFruit(fruit);
@@ -149,7 +149,7 @@ void Main::update(float dt)
             // 終了文字の表示
             auto finish = Sprite::create("finish.png");
             auto winSize = Director::getInstance()->getWinSize();
-            finish->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+            finish->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
             finish->setScale(0);
             auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
             auto disappear = EaseExponentialIn::create(ScaleTo::create(0.25, 0));
@@ -193,12 +193,12 @@ Sprite* Main::addFruit()
     std::uniform_int_distribution<float> posDist(min, max);
     float fruitXPos = posDist(_engine);
     
-    fruit->setPosition(Point(fruitXPos,
+    fruit->setPosition(Vec2(fruitXPos,
                              winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
     this->addChild(fruit);
     _fruits.pushBack(fruit);
     
-    auto ground = Point(fruitXPos, 0);
+    auto ground = Vec2(fruitXPos, 0);
     fruit->setScale(0);
     fruit->runAction(Sequence::create(ScaleTo::create(0.25, 1),
                                       Repeat::create(Sequence::create(RotateTo::create(0.25, -30), RotateTo::create(0.25, 30), NULL), 2),
@@ -231,7 +231,7 @@ void Main::catchFruit(cocos2d::Sprite *fruit)
 void Main::addReadyLabel()
 {
     auto winSize = Director::getInstance()->getWinSize();
-    auto center = Point(winSize.width / 2.0, winSize.height / 2.0);
+    auto center = Vec2(winSize.width / 2.0, winSize.height / 2.0);
     auto ready = Sprite::create("ready.png");
     ready->setScale(0);
     ready->setPosition(center);
@@ -278,7 +278,7 @@ void Main::addResultMenu()
                                              });
     auto menu = Menu::create(replayButton, titleButton, NULL);
     menu->alignItemsVerticallyWithPadding(30);
-    menu->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+    menu->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
 }
 

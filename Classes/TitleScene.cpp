@@ -31,17 +31,17 @@ bool Title::init()
     
     // 背景の追加
     auto background = Sprite::create("title_background.png");
-    background->setPosition(Point(winSize.width / 2.0, winSize.height / 2.0));
+    background->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(background);
     
     // ロゴの追加
     auto logo = Sprite::create("logo.png");
-    logo->setPosition(Point(winSize.width / 2.0, winSize.height - 300));
+    logo->setPosition(Vec2(winSize.width / 2.0, winSize.height - 300));
     this->addChild(logo);
     
     // Touch to Startの追加
     auto touchToStart = Label::createWithSystemFont("Touch to Start", "Helvetica", 56);
-    touchToStart->setPosition(Point(winSize.width / 2.0, 150));
+    touchToStart->setPosition(Vec2(winSize.width / 2.0, 150));
     auto blink = Sequence::create(FadeTo::create(0.5, 127),
                                   FadeTo::create(0.5, 255),
                                   NULL);
