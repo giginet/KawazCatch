@@ -12,7 +12,7 @@
 #include "cocos2d.h"
 #include <random>
 
-class Main :public cocos2d::Layer
+class MainScene :public cocos2d::Layer
 {
 public:
     /// フルーツの種類を表します
@@ -54,10 +54,10 @@ public:
 
     static cocos2d::Scene* createScene();
     bool init() override;
-    virtual ~Main();
+    virtual ~MainScene();
     void update(float dt);
     void onEnterTransitionDidFinish() override;
-    CREATE_FUNC(Main);
+    CREATE_FUNC(MainScene);
     CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
     CC_SYNTHESIZE(int, _score, Score);
     CC_SYNTHESIZE(bool, _isCrash, IsCrash);

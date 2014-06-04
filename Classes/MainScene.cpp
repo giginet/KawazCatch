@@ -20,15 +20,15 @@ const float TIME_LIMIT_SECOND = 60;
 /// 落下速度
 const float FALLING_DURATION = 3.0;
 
-Scene* Main::createScene()
+Scene* MainScene::createScene()
 {
     auto scene = Scene::create();
-    auto layer = Main::create();
+    auto layer = MainScene::create();
     scene->addChild(layer);
     return scene;
 }
 
-bool Main::init()
+bool MainScene::init()
 {
     if (!Layer::init()) {
         return false;
@@ -100,7 +100,7 @@ bool Main::init()
     return true;
 }
 
-Main::~Main()
+MainScene::~MainScene()
 {
     // デストラクタ
     CC_SAFE_RELEASE_NULL(_player);
@@ -108,7 +108,7 @@ Main::~Main()
     CC_SAFE_RELEASE_NULL(_secondLabel);
 }
 
-void Main::onEnterTransitionDidFinish()
+void MainScene::onEnterTransitionDidFinish()
 {
     // シーン遷移が完了したとき
     Layer::onEnterTransitionDidFinish();
@@ -119,7 +119,7 @@ void Main::onEnterTransitionDidFinish()
     this->addReadyLabel();
 }
 
-void Main::update(float dt)
+void MainScene::update(float dt)
 {
     if (_state == GameState::PLAYING) {
         // PLAYING状態の時
@@ -168,7 +168,7 @@ void Main::update(float dt)
     }
 }
 
-Sprite* Main::addFruit()
+Sprite* MainScene::addFruit()
 {
     
     auto winSize = Director::getInstance()->getWinSize();
@@ -209,16 +209,16 @@ Sprite* Main::addFruit()
     return fruit;
 }
 
-void Main::catchFruit(cocos2d::Sprite *fruit)
+void MainScene::catchFruit(cocos2d::Sprite *fruit)
 {
     FruitType fruitType = (FruitType)fruit->getTag();
     fruit->removeFromParent();
     _fruits.eraseObject(fruit);
     switch (fruitType) {
-        case Main::FruitType::GOLDEN:
+        case MainScene::FruitType::GOLDEN:
             _score += 5;
             break;
-        case Main::FruitType::BOMB:
+        case MainScene::FruitType::BOMB:
             this->onCatchBomb();
             break;
         default:
@@ -228,7 +228,7 @@ void Main::catchFruit(cocos2d::Sprite *fruit)
     _scoreLabel->setString(std::to_string(_score));
 }
 
-void Main::addReadyLabel()
+void MainScene::addReadyLabel()
 {
     auto winSize = Director::getInstance()->getWinSize();
     auto center = Vec2(winSize.width / 2.0, winSize.height / 2.0);
@@ -253,7 +253,7 @@ void Main::addReadyLabel()
     
 }
 
-void Main::addResultMenu()
+void MainScene::addResultMenu()
 {
     // ENDING状態のとき
     _state = GameState::RESULT;
@@ -263,7 +263,7 @@ void Main::addResultMenu()
                                               "replay_button_pressed.png",
                                               [this](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
-                                                  auto scene = Main::createScene();
+                                                  auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
                                                   Director::getInstance()->replaceScene(transition);
                                               });
@@ -272,7 +272,7 @@ void Main::addResultMenu()
                                              "title_button_pressed.png",
                                              [this](Ref* ref) {
                                                  // 「タイトルへ戻る」ボタンを押したときの処理
-                                                 auto scene = Title::createScene();
+                                                 auto scene = TitleScene::createScene();
                                                  auto transition = TransitionCrossFade::create(0.5, scene);
                                                  Director::getInstance()->replaceScene(transition);
                                              });
@@ -282,7 +282,7 @@ void Main::addResultMenu()
     this->addChild(menu);
 }
 
-void Main::onCatchBomb()
+void MainScene::onCatchBomb()
 {
     _isCrash = true; // クラッシュ状態
     // ToDo アニメーション
@@ -294,7 +294,7 @@ void Main::onCatchBomb()
     _score = MAX(0, _score - 4); // 0未満になったら0点にする
 }
 
-int Main::generateRandom(int n)
+int MainScene::generateRandom(int n)
 {
     std::uniform_int_distribution<> dist(0, n);
     return dist(_engine);
