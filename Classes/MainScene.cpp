@@ -5,11 +5,10 @@
 //  Created by giginet on 5/15/14.
 //
 //
+#include "SimpleAudioEngine.h"
 
 #include "MainScene.h"
 #include "TitleScene.h"
-#include <random>
-#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -19,6 +18,21 @@ const int FRUIT_TOP_MERGIN = 40;
 const float TIME_LIMIT_SECOND = 60;
 /// 落下速度
 const float FALLING_DURATION = 3.0;
+/// ふつうのフルーツの数
+const int NORMAL_FRUIT_COUNT = 5;
+/// 黄金のフルーツが出る確率の初期値
+const float GOLDEN_FRUIT_PROBABILITY_BASE = 2;
+/// 爆弾が出る確率の初期値
+const float BOMB_PROBABILITY_BASE = 5;
+/// 黄金のフルーツが出る確率の増え幅
+const float GOLDEN_FRUIT_PROBABILITY_RATE = 0.1;
+/// 爆弾が出る確率の増え幅
+const int BOMB_PROBABILITY_RATE = 0.15;
+/// フルーツ出現頻度の増加率
+const float FRUIT_SPAWN_INCREASE_RATE = 1.1f;
+/// フルーツ出現頻度の最大値
+const int MINIMUM_SPAWN_PROBABILITY = 12;
+
 
 Scene* MainScene::createScene()
 {
@@ -31,14 +45,14 @@ Scene* MainScene::createScene()
 MainScene::MainScene() :
 _score(0),
 _isCrash(false),
-_lot(0),
+_addFrameCount(0),
 _second(0),
 _state(GameState::READY),
 _player(NULL),
 _secondLabel(NULL),
 _scoreLabel(NULL)
 {
-    // 乱数周りの初期化
+    // 乱数の初期化
     std::random_device rdev;
     _engine.seed(rdev());
 }
@@ -96,7 +110,7 @@ bool MainScene::init()
     this->setSecondLabel(secondLabel);
     this->addChild(_secondLabel);
     this->scheduleUpdate();
-
+    
     return true;
 }
 
@@ -116,25 +130,22 @@ void MainScene::onEnterTransitionDidFinish()
     // BGMを鳴らす
     CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
     
+    // 「READY」演出を行う
     this->addReadyLabel();
 }
 
 void MainScene::update(float dt)
 {
-    if (_state == GameState::PLAYING) {
-        // PLAYING状態の時
-        if (_second > FALLING_DURATION && _lot == 0) {
-            
-            
-            float t = _second / 1.5f;
-            t = MAX(t, 12);
-            std::binomial_distribution<> dest(t, 0.5);
-            _lot = dest(_engine);
+    if (_state == GameState::PLAYING) { // PLAYING状態の時
+        int p = MAX(static_cast<int>(powf(FRUIT_SPAWN_INCREASE_RATE, _second)),
+                    MINIMUM_SPAWN_PROBABILITY);
+        int random = rand() % p;
+        if (random == 0) {
             this->addFruit();
-        } else {
-            --_lot;
         }
+
         
+        // フルーツの当たり判定を行う
         for (auto fruit : _fruits) {
             auto busketPosition = _player->getPosition() - Vec2(0, 10);
             bool isHit = fruit->getBoundingBox().containsPoint(busketPosition);
@@ -142,15 +153,19 @@ void MainScene::update(float dt)
                 this->catchFruit(fruit);
             }
         }
+        
+        // 制限時間を更新する
         _second -= dt;
         _secondLabel->setString(std::to_string(static_cast<int>(_second)));
-        if (_second < 0) {
-            _state = GameState::ENDING;
+        if (_second < 0) { // 制限時間が0未満になったとき
+            _state = GameState::ENDING; // ゲーム状態をENDINGに移行
             // 終了文字の表示
             auto finish = Sprite::create("finish.png");
             auto winSize = Director::getInstance()->getWinSize();
             finish->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
             finish->setScale(0);
+            
+            // アクションの作成
             auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
             auto disappear = EaseExponentialIn::create(ScaleTo::create(0.25, 0));
             
@@ -172,17 +187,22 @@ Sprite* MainScene::addFruit()
 {
     
     auto winSize = Director::getInstance()->getWinSize();
-    float p = _second < 20 ? 12 : 5;
+    // フルーツの種類を選択する
     int fruitType = 0;
     int r = this->generateRandom(100);
-    if (r <= p) {
+    int pastSecond = TIME_LIMIT_SECOND - _second; // 経過時間
+    float goldenFruitProbability = GOLDEN_FRUIT_PROBABILITY_BASE + GOLDEN_FRUIT_PROBABILITY_RATE * pastSecond;
+    float bombProbability = BOMB_PROBABILITY_BASE + BOMB_PROBABILITY_RATE * pastSecond;
+    
+    if (r <= goldenFruitProbability) { // 黄金のフルーツ
         fruitType = static_cast<int>(FruitType::GOLDEN);
-    } else if (r <= p * 2) {
+    } else if (r <= goldenFruitProbability + bombProbability) { // 爆弾
         fruitType = static_cast<int>(FruitType::BOMB);
-    } else {
-        fruitType = this->generateRandom(4);
+    } else { // その他のフルーツ
+        fruitType = this->generateRandom(NORMAL_FRUIT_COUNT - 1);
     }
     
+    // フルーツを作成する
     std::string filename = "fruit" + std::to_string(fruitType) + ".png";
     auto fruit = Sprite::create(filename);
     fruit->setTag(fruitType);
@@ -198,12 +218,19 @@ Sprite* MainScene::addFruit()
     this->addChild(fruit);
     _fruits.pushBack(fruit);
     
+    // フルーツに動きをつける
     auto ground = Vec2(fruitXPos, 0);
     fruit->setScale(0);
+    auto swing = Sequence::create(RotateTo::create(0.25, -30),
+                                  RotateTo::create(0.25, 30),
+                                  NULL); // 左右に揺れるアクション
     fruit->runAction(Sequence::create(ScaleTo::create(0.25, 1),
-                                      Repeat::create(Sequence::create(RotateTo::create(0.25, -30), RotateTo::create(0.25, 30), NULL), 2),
+                                      Repeat::create(swing, 2),
                                       RotateTo::create(0, 0.125),
                                       MoveTo::create(FALLING_DURATION, ground),
+                                      CallFuncN::create([this](Node *n) {
+        _fruits.eraseObject(dynamic_cast<Sprite *>(n));
+    }),
                                       RemoveSelf::create(),
                                       NULL));
     return fruit;
@@ -211,7 +238,7 @@ Sprite* MainScene::addFruit()
 
 void MainScene::catchFruit(cocos2d::Sprite *fruit)
 {
-    FruitType fruitType = (FruitType)fruit->getTag();
+    FruitType fruitType = static_cast<FruitType>(fruit->getTag());
     fruit->removeFromParent();
     _fruits.eraseObject(fruit);
     switch (fruitType) {
@@ -232,25 +259,31 @@ void MainScene::addReadyLabel()
 {
     auto winSize = Director::getInstance()->getWinSize();
     auto center = Vec2(winSize.width / 2.0, winSize.height / 2.0);
+    
+    // Readyの文字を定義する
     auto ready = Sprite::create("ready.png");
-    ready->setScale(0);
+    ready->setScale(0); // 最初に大きさを0にしておく
     ready->setPosition(center);
     this->addChild(ready);
+    
+    // STARTの文字を定義する
     auto start = Sprite::create("start.png");
     start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(0.5, 5.0), 0.5),
                                                       FadeOut::create(0.5),
-                                                      NULL),
-                                      RemoveSelf::create(), NULL));
-    start->setPosition(center);
-    ready->runAction(Sequence::create(ScaleTo::create(0.25, 1),
-                                      DelayTime::create(1.0),
-                                      CallFunc::create([this, start] {
-        this->addChild(start);
-        _state = GameState::PLAYING;
-    }),
-                                      RemoveSelf::create(),
+                                                      NULL), // 0.5秒かけて拡大とフェードアウトを同時に行う
+                                      RemoveSelf::create(), // 自分を削除する
                                       NULL));
+    start->setPosition(center);
     
+    // READYにアニメーションを追加する
+    ready->runAction(Sequence::create(ScaleTo::create(0.25, 1), // 0.25秒かけて等倍に拡大される
+                                      DelayTime::create(1.0), // 1.0秒待つ
+                                      CallFunc::create([this, start] { // ラムダの中でthisとstart変数を使っているのでキャプチャに加える
+        this->addChild(start); // 「スタート」のラベルを追加する（この時点でスタートのアニメーションが始まる）
+        _state = GameState::PLAYING; // ゲーム状態をPLAYINGに切り替える
+    }),
+                                      RemoveSelf::create(), // 自分を削除する
+                                      NULL));
 }
 
 void MainScene::addResultMenu()
