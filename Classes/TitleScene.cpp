@@ -12,15 +12,15 @@
 
 USING_NS_CC;
 
-Scene* TitleScene::createScene()
+Scene* Title::createScene()
 {
     auto scene = Scene::create();
-    auto layer = TitleScene::create();
+    auto layer = Title::create();
     scene->addChild(layer);
     return scene;
 }
 
-bool TitleScene::init()
+bool Title::init()
 {
     if (!Layer::init()) {
         return false;
@@ -56,7 +56,7 @@ bool TitleScene::init()
         this->runAction(Sequence::create(DelayTime::create(0.5),
             
                                          CallFunc::create([]{
-            auto scene = MainScene::createScene();
+            auto scene = Main::createScene();
             auto transition = TransitionPageTurn::create(0.5, scene, true);
             Director::getInstance()->replaceScene(transition);
         }),
@@ -68,7 +68,7 @@ bool TitleScene::init()
     return true;
 }
 
-void TitleScene::onEnterTransitionDidFinish()
+void Title::onEnterTransitionDidFinish()
 {
     // BGMの再生
     CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("title.wav", true);

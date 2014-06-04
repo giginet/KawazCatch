@@ -20,15 +20,15 @@ const float TIME_LIMIT_SECOND = 60;
 /// 落下速度
 const float FALLING_DURATION = 3.0;
 
-Scene* MainScene::createScene()
+Scene* Main::createScene()
 {
     auto scene = Scene::create();
-    auto layer = MainScene::create();
+    auto layer = Main::create();
     scene->addChild(layer);
     return scene;
 }
 
-bool MainScene::init()
+bool Main::init()
 {
     if (!Layer::init()) {
         return false;
@@ -100,7 +100,7 @@ bool MainScene::init()
     return true;
 }
 
-MainScene::~MainScene()
+Main::~Main()
 {
     // デストラクタ
     CC_SAFE_RELEASE_NULL(_player);
@@ -108,7 +108,7 @@ MainScene::~MainScene()
     CC_SAFE_RELEASE_NULL(_secondLabel);
 }
 
-void MainScene::onEnterTransitionDidFinish()
+void Main::onEnterTransitionDidFinish()
 {
     // シーン遷移が完了したとき
     Layer::onEnterTransitionDidFinish();
@@ -119,7 +119,7 @@ void MainScene::onEnterTransitionDidFinish()
     this->addReadyLabel();
 }
 
-void MainScene::update(float dt)
+void Main::update(float dt)
 {
     if (_state == GameState::PLAYING) {
         // PLAYING状態の時
@@ -168,7 +168,7 @@ void MainScene::update(float dt)
     }
 }
 
-Sprite* MainScene::addFruit()
+Sprite* Main::addFruit()
 {
     
     auto winSize = Director::getInstance()->getWinSize();
@@ -209,16 +209,16 @@ Sprite* MainScene::addFruit()
     return fruit;
 }
 
-void MainScene::catchFruit(cocos2d::Sprite *fruit)
+void Main::catchFruit(cocos2d::Sprite *fruit)
 {
     FruitType fruitType = (FruitType)fruit->getTag();
     fruit->removeFromParent();
     _fruits.eraseObject(fruit);
     switch (fruitType) {
-        case MainScene::FruitType::GOLDEN:
+        case Main::FruitType::GOLDEN:
             _score += 5;
             break;
-        case MainScene::FruitType::BOMB:
+        case Main::FruitType::BOMB:
             this->onCatchBomb();
             break;
         default:
@@ -228,7 +228,7 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
     _scoreLabel->setString(std::to_string(_score));
 }
 
-void MainScene::addReadyLabel()
+void Main::addReadyLabel()
 {
     auto winSize = Director::getInstance()->getWinSize();
     auto center = Point(winSize.width / 2.0, winSize.height / 2.0);
@@ -253,7 +253,7 @@ void MainScene::addReadyLabel()
     
 }
 
-void MainScene::addResultMenu()
+void Main::addResultMenu()
 {
     // ENDING状態のとき
     _state = GameState::RESULT;
@@ -263,7 +263,7 @@ void MainScene::addResultMenu()
                                               "replay_button_pressed.png",
                                               [this](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
-                                                  auto scene = MainScene::createScene();
+                                                  auto scene = Main::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
                                                   Director::getInstance()->replaceScene(transition);
                                               });
@@ -272,7 +272,7 @@ void MainScene::addResultMenu()
                                              "title_button_pressed.png",
                                              [this](Ref* ref) {
                                                  // 「タイトルへ戻る」ボタンを押したときの処理
-                                                 auto scene = TitleScene::createScene();
+                                                 auto scene = Title::createScene();
                                                  auto transition = TransitionCrossFade::create(0.5, scene);
                                                  Director::getInstance()->replaceScene(transition);
                                              });
@@ -282,7 +282,7 @@ void MainScene::addResultMenu()
     this->addChild(menu);
 }
 
-void MainScene::onCatchBomb()
+void Main::onCatchBomb()
 {
     _isCrash = true; // クラッシュ状態
     // ToDo アニメーション
@@ -294,7 +294,7 @@ void MainScene::onCatchBomb()
     _score = MAX(0, _score - 4); // 0未満になったら0点にする
 }
 
-int MainScene::generateRandom(int n)
+int Main::generateRandom(int n)
 {
     std::uniform_int_distribution<> dist(0, n);
     return dist(_engine);

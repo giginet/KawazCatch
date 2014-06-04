@@ -11,13 +11,13 @@
 
 #include "cocos2d.h"
 
-class TitleScene :public cocos2d::Layer
+class Title :public cocos2d::Layer
 {
 public:
     static cocos2d::Scene* createScene();
     bool init() override;
     void onEnterTransitionDidFinish() override;
-    CREATE_FUNC(TitleScene);
+    CREATE_FUNC(Title);
 };
 
 #endif /* defined(__KawazCatch__TitleScene__) */
