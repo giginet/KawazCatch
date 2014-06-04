@@ -40,6 +40,12 @@ bool MainScene::init()
     // クラッシュ状態の設定
     _isCrash = false;
     
+    // 乱数周りの初期化
+    _lot = 0;
+    std::random_device rdev;
+    _engine.seed(rdev());
+    
+    
     // 背景を表示する
     auto director = Director::getInstance();
     auto size = director->getWinSize();
@@ -88,10 +94,6 @@ bool MainScene::init()
     this->addChild(_secondLabel);
     this->scheduleUpdate();
     
-    _lot = 0;
-    std::random_device rdev;
-    _engine.seed(rdev());
-    
     // 初期状態をREADYにする
     _state = GameState::READY;
     
@@ -122,7 +124,11 @@ void MainScene::update(float dt)
     if (_state == GameState::PLAYING) {
         // PLAYING状態の時
         if (_second > FALLING_DURATION && _lot == 0) {
-            std::binomial_distribution<> dest(_second * 2.0, 0.5);
+            
+            
+            float t = _second / 1.5f;
+            t = MAX(t, 12);
+            std::binomial_distribution<> dest(t, 0.5);
             _lot = dest(_engine);
             this->addFruit();
         } else {
@@ -149,7 +155,7 @@ void MainScene::update(float dt)
             auto disappear = EaseExponentialIn::create(ScaleTo::create(0.25, 0));
             
             finish->runAction(Sequence::create(appear,
-                                               DelayTime::create(0.5),
+                                               DelayTime::create(2.0),
                                                disappear,
                                                DelayTime::create(1.0),
                                                CallFunc::create([this] {
@@ -164,14 +170,22 @@ void MainScene::update(float dt)
 
 Sprite* MainScene::addFruit()
 {
-    std::uniform_int_distribution<> dist(0, (int)FruitType::COUNT - 1);
     
     auto winSize = Director::getInstance()->getWinSize();
-    int fruitNumber = dist(_engine);
+    float p = _second < 20 ? 12 : 5;
+    int fruitType = 0;
+    int r = this->generateRandom(100);
+    if (r <= p) {
+        fruitType = (int)FruitType::GOLDEN;
+    } else if (r <= p * 2) {
+        fruitType = (int)FruitType::BOMB;
+    } else {
+        fruitType = this->generateRandom(4);
+    }
     
-    std::string filename = "fruit" + std::to_string(fruitNumber) + ".png";
+    std::string filename = "fruit" + std::to_string(fruitType) + ".png";
     auto fruit = Sprite::create(filename);
-    fruit->setTag(fruitNumber);
+    fruit->setTag(fruitType);
     
     auto fruitSize = fruit->getContentSize();
     float min = fruitSize.width / 2.0;
@@ -274,4 +288,10 @@ void MainScene::onCatchBomb()
     }),
                                         NULL));
     _score = MAX(0, _score - 4); // 0未満になったら0点にする
+}
+
+int MainScene::generateRandom(int n)
+{
+    std::uniform_int_distribution<> dist(0, n);
+    return dist(_engine);
 }

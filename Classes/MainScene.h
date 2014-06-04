@@ -63,6 +63,8 @@ public:
     CC_SYNTHESIZE(bool, _isCrash, IsCrash);
     CC_SYNTHESIZE(float, _second, Second);
     CC_SYNTHESIZE(GameState, _state, State);
+    CC_SYNTHESIZE(int, _lot, Lot);
+    CC_SYNTHESIZE(std::mt19937, _engine, Engine);
     CC_SYNTHESIZE_RETAIN(cocos2d::Label *, _secondLabel, SecondLabel);
     CC_SYNTHESIZE_RETAIN(cocos2d::Label *, _scoreLabel, ScoreLabel);
     CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);
@@ -89,8 +91,9 @@ private:
      */
     void onCatchBomb();
     
-    float _lot;
-    std::mt19937 _engine;
+    /** 0 ~ nまでの値を返します
+     */
+    int generateRandom(int n);
 };
 
 #endif /* defined(__KawazCatch__MainScene__) */

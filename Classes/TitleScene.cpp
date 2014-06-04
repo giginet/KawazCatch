@@ -57,7 +57,7 @@ bool TitleScene::init()
             
                                          CallFunc::create([]{
             auto scene = MainScene::createScene();
-            auto transition = TransitionPageTurn::create(1.0, scene, true);
+            auto transition = TransitionPageTurn::create(0.5, scene, true);
             Director::getInstance()->replaceScene(transition);
         }),
                                          NULL));
