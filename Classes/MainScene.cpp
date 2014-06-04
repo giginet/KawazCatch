@@ -199,7 +199,11 @@ Sprite* MainScene::addFruit()
     _fruits.pushBack(fruit);
     
     auto ground = Point(fruitXPos, 0);
-    fruit->runAction(Sequence::create(MoveTo::create(FALLING_DURATION, ground),
+    fruit->setScale(0);
+    fruit->runAction(Sequence::create(ScaleTo::create(0.25, 1),
+                                      Repeat::create(Sequence::create(RotateTo::create(0.25, -30), RotateTo::create(0.25, 30), NULL), 2),
+                                      RotateTo::create(0, 0.125),
+                                      MoveTo::create(FALLING_DURATION, ground),
                                       RemoveSelf::create(),
                                       NULL));
     return fruit;
