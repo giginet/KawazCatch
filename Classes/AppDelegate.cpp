@@ -50,8 +50,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->setSearchResolutionsOrder(searchResolutionOrder);
     
     // create a scene. it's an autorelease object
-    auto scene = Title::createScene();
-    
+    auto scene = TitleScene::createScene();
+
     // run
     director->runWithScene(scene);
     
