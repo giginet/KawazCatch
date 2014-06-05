@@ -26,6 +26,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
     
+    auto addPath = [](const char* path) {
+        FileUtils::getInstance()->addSearchPath(path);
+    };
+    addPath("music");
+    addPath("se");
+    
     // 画像リソースをセットする
     std::vector<std::string> searchResolutionOrder;
     auto platform = this->getTargetPlatform(); // 現在のプラットフォーム

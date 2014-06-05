@@ -174,6 +174,7 @@ void MainScene::update(float dt)
             auto winSize = Director::getInstance()->getWinSize();
             finish->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
             finish->setScale(0);
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("finish.mp3");
             
             // アクションの作成
             auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
@@ -311,6 +312,7 @@ void MainScene::addReadyLabel()
                                       CallFunc::create([this, start] { // ラムダの中でthisとstart変数を使っているのでキャプチャに加える
         this->addChild(start); // 「スタート」のラベルを追加する（この時点でスタートのアニメーションが始まる）
         _state = GameState::PLAYING; // ゲーム状態をPLAYINGに切り替える
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("start.mp3");
     }),
                                       RemoveSelf::create(), // 自分を削除する
                                       NULL));
@@ -370,6 +372,7 @@ void MainScene::onCatchBomb()
     }),
                                         NULL));
     _score = MAX(0, _score - 4); // 0未満になったら0点にする
+    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
 }
 
 float MainScene::generateRandom(float min, float max)
