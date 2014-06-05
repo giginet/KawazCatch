@@ -34,7 +34,8 @@ const float FRUIT_SPAWN_INCREASE_BASE = 2;
 const float FRUIT_SPAWN_INCREASE_RATE = 1.01f;
 /// フルーツ出現頻度の最大値
 const float MAXIMUM_SPAWN_PROBABILITY = 50;
-
+/// 爆弾を取ったときに減点される点数
+const int BOMB_PENALTY_SCORE = 4;
 
 Scene* MainScene::createScene()
 {
@@ -358,9 +359,8 @@ void MainScene::onCatchBomb()
     auto playerSize = _player->getContentSize();
     const int animationFrameCount = 3;
     for (int i = 0; i < animationFrameCount; ++i) {
-        //auto filename = "player_crash" + std::to_string(i) + ".png";
-        auto filename = "player.png";
-        auto frame = SpriteFrame::create(filename, Rect(0, 0, playerSize.width, playerSize.height));
+        auto rect = Rect(playerSize.width * i, 0, playerSize.width, playerSize.height);
+        auto frame = SpriteFrame::create("player_crash.png", rect) ;
         frames.pushBack(frame);
     }
     auto animation = Animation::createWithSpriteFrames(frames, 1.0 / 60.0);
@@ -371,7 +371,7 @@ void MainScene::onCatchBomb()
         _isCrash = false;
     }),
                                         NULL));
-    _score = MAX(0, _score - 4); // 0未満になったら0点にする
+    _score = MAX(0, _score - BOMB_PENALTY_SCORE); // 0未満になったら0点にする
     CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
 }
 
