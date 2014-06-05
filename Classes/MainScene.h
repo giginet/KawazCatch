@@ -100,7 +100,7 @@ private:
      */
     void onCatchBomb();
     
-    /** min ~ maxを含まない値までの乱数をfloatで返します
+    /** min ~ maxの乱数をfloatで返します
      *  @param min 最小値
      *  @param max 最大値
      *  @return min <= n < maxの整数値
