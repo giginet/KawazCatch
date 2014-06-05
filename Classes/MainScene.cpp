@@ -36,6 +36,8 @@ const float FRUIT_SPAWN_INCREASE_RATE = 1.01f;
 const float MAXIMUM_SPAWN_PROBABILITY = 50;
 /// 爆弾を取ったときに減点される点数
 const int BOMB_PENALTY_SCORE = 4;
+/// ハイスコア格納用のキー
+const char* HIGHSCORE_KEY = "highscore_key";
 
 Scene* MainScene::createScene()
 {
@@ -52,7 +54,8 @@ _second(0),
 _state(GameState::READY),
 _player(NULL),
 _secondLabel(NULL),
-_scoreLabel(NULL)
+_scoreLabel(NULL),
+_highscoreLabel(NULL)
 {
     // 乱数の初期化
     std::random_device rdev;
@@ -103,21 +106,46 @@ bool MainScene::init()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     // スコアラベルの追加
-    auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Helvetica", 32);
-    scoreLabel->enableShadow();
-    scoreLabel->enableOutline(Color4B::RED, 2.5);
+    auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Marker Felt", 16);
+    scoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    scoreLabel->enableOutline(Color4B::BLACK, 1.5);
     this->setScoreLabel(scoreLabel);
-    _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 30));
+    _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 40));
     this->addChild(_scoreLabel);
+    auto scoreLabelHeader = Label::createWithSystemFont("SCORE", "Marker Felt", 16);
+    scoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    scoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
+    scoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 20));
+    this->addChild(scoreLabelHeader);
     
     // タイマーラベルの追加
     _second = TIME_LIMIT_SECOND;
-    auto secondLabel = Label::createWithSystemFont(std::to_string(static_cast<int>(_second)), "Helvetica", 32);
-    secondLabel->enableShadow();
-    secondLabel->enableOutline(Color4B::RED, 2.5);
-    secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 30));
+    auto secondLabel = Label::createWithSystemFont(std::to_string(static_cast<int>(_second)), "Marker Felt", 16);
+    secondLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    secondLabel->enableOutline(Color4B::BLACK, 1.5);
+    secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 40));
     this->setSecondLabel(secondLabel);
     this->addChild(_secondLabel);
+    auto secondLabelHeader = Label::createWithSystemFont("TIME", "Marker Felt", 16);
+    secondLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    secondLabelHeader->enableOutline(Color4B::BLACK, 1.5);
+    secondLabelHeader->setPosition(Vec2(size.width / 2.0, size.height - 20));
+    this->addChild(secondLabelHeader);
+    
+    // ハイスコアラベルの追加
+    auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
+    auto highscoreLabel = Label::createWithSystemFont(std::to_string(static_cast<int>(highscore)), "Marker Felt", 16);
+    highscoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    highscoreLabel->enableOutline(Color4B::BLACK, 1.5);
+    highscoreLabel->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 40));
+    this->setHighscoreLabel(highscoreLabel);
+    this->addChild(_highscoreLabel);
+    auto highscoreLabelHeader = Label::createWithSystemFont("HIGHSCORE", "Marker Felt", 16);
+    highscoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    highscoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
+    highscoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 20));
+    this->addChild(highscoreLabelHeader);
+    
     this->scheduleUpdate();
     
     return true;
@@ -129,6 +157,7 @@ MainScene::~MainScene()
     CC_SAFE_RELEASE_NULL(_player);
     CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_secondLabel);
+    CC_SAFE_RELEASE_NULL(_highscoreLabel);
 }
 
 void MainScene::onEnterTransitionDidFinish()
