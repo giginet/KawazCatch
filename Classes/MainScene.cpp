@@ -378,6 +378,13 @@ void MainScene::addResultMenu()
     menu->alignItemsVerticallyWithPadding(15); // ボタンを縦に並べる
     menu->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
+    
+    // ハイスコアの更新
+    auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
+    if (_score > highscore) {
+        _highscoreLabel->setString(std::to_string(highscore));
+        UserDefault::getInstance()->setIntegerForKey(HIGHSCORE_KEY, _score);
+    }
 }
 
 void MainScene::onCatchBomb()
