@@ -84,11 +84,18 @@ bool MainScene::init()
     listener->onTouchMoved = [this, size](Touch* touch, Event* event) {
         // タッチ位置が動いたとき
         if (!this->getIsCrash()) { // クラッシュしてないとき
-            Vec2 delta = touch->getDelta(); // 前回とのタッチ位置との差をベクトルで取得する
-            Vec2 position = _player->getPosition(); // 現在のかわずたんの座標を取得する
+            // 前回とのタッチ位置との差をベクトルで取得する
+            Vec2 delta = touch->getDelta();
+            
+            // 現在のかわずたんの座標を取得する
+            Vec2 position = _player->getPosition();
+            
+            // 現在座標 + 移動量を新たな座標にする
             Vec2 newPosition = position + delta;
+            
+            // 画面外に飛び出していたら補正する
             newPosition = newPosition.getClampPoint(Vec2(0, position.y), Vec2(size.width, position.y));
-            _player->setPosition(newPosition); // 現在座標 + 移動量を新たな座標にする
+            _player->setPosition(newPosition);
         }
     };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
@@ -137,13 +144,14 @@ void MainScene::onEnterTransitionDidFinish()
 void MainScene::update(float dt)
 {
     if (_state == GameState::PLAYING) { // PLAYING状態の時
+        
+        // フルーツの出現を判定する
         int p = MAX(static_cast<int>(powf(FRUIT_SPAWN_INCREASE_RATE, _second)),
                     MINIMUM_SPAWN_PROBABILITY);
         int random = rand() % p;
         if (random == 0) {
             this->addFruit();
         }
-
         
         // フルーツの当たり判定を行う
         for (auto fruit : _fruits) {
@@ -229,29 +237,47 @@ Sprite* MainScene::addFruit()
                                       RotateTo::create(0, 0.125),
                                       MoveTo::create(FALLING_DURATION, ground),
                                       CallFuncN::create([this](Node *n) {
-        _fruits.eraseObject(dynamic_cast<Sprite *>(n));
+        this->removeFruit(dynamic_cast<Sprite *>(n));
     }),
-                                      RemoveSelf::create(),
                                       NULL));
     return fruit;
 }
 
+bool MainScene::removeFruit(cocos2d::Sprite *fruit)
+{
+    if (_fruits.contains(fruit)) {
+        // _fruits配列から削除する
+        _fruits.eraseObject(fruit);
+        // 親ノードから削除する
+        fruit->removeFromParent();
+        return true;
+    }
+    return false;
+}
+
 void MainScene::catchFruit(cocos2d::Sprite *fruit)
 {
+    // フルーツタイプの取得
     FruitType fruitType = static_cast<FruitType>(fruit->getTag());
-    fruit->removeFromParent();
-    _fruits.eraseObject(fruit);
     switch (fruitType) {
         case MainScene::FruitType::GOLDEN:
+            // 黄金のフルーツのとき
             _score += 5;
             break;
         case MainScene::FruitType::BOMB:
+            // 爆弾のとき
             this->onCatchBomb();
             break;
         default:
+            // その他のフルーツのとき
             _score += 1;
             break;
     }
+    
+    // フルーツの削除
+    this->removeFruit(fruit);
+    
+    // スコアの更新
     _scoreLabel->setString(std::to_string(_score));
 }
 
@@ -291,6 +317,7 @@ void MainScene::addResultMenu()
     // ENDING状態のとき
     _state = GameState::RESULT;
     auto winSize = Director::getInstance()->getWinSize();
+    
     // 「もう一度遊ぶ」ボタン
     auto replayButton = MenuItemImage::create("replay_button.png",
                                               "replay_button_pressed.png",
@@ -309,8 +336,10 @@ void MainScene::addResultMenu()
                                                  auto transition = TransitionCrossFade::create(0.5, scene);
                                                  Director::getInstance()->replaceScene(transition);
                                              });
+    
+    // メニューの作成
     auto menu = Menu::create(replayButton, titleButton, NULL);
-    menu->alignItemsVerticallyWithPadding(15);
+    menu->alignItemsVerticallyWithPadding(15); // ボタンを縦に並べる
     menu->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
 }

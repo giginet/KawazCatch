@@ -77,8 +77,14 @@ private:
      */
     cocos2d::Sprite* addFruit();
     
+    /** マップからフルーツを取り除きます
+     *  @param  fruit 削除するフルーツ
+     *  @return 正しく削除されたか
+     */
+    bool removeFruit(cocos2d::Sprite *fruit);
+    
     /** フルーツを取得します
-     * @param Sprite* 取得するフルーツ
+     *  @param Sprite* 取得するフルーツ
      */
     void catchFruit(cocos2d::Sprite* fruit);
     
