@@ -112,6 +112,8 @@ bool MainScene::init()
     this->setScoreLabel(scoreLabel);
     _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 40));
     this->addChild(_scoreLabel);
+    
+    // スコアヘッダーの追加
     auto scoreLabelHeader = Label::createWithSystemFont("SCORE", "Marker Felt", 16);
     scoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     scoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
@@ -126,6 +128,8 @@ bool MainScene::init()
     secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 40));
     this->setSecondLabel(secondLabel);
     this->addChild(_secondLabel);
+    
+    // タイマーヘッダーの追加
     auto secondLabelHeader = Label::createWithSystemFont("TIME", "Marker Felt", 16);
     secondLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     secondLabelHeader->enableOutline(Color4B::BLACK, 1.5);
@@ -140,6 +144,8 @@ bool MainScene::init()
     highscoreLabel->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 40));
     this->setHighscoreLabel(highscoreLabel);
     this->addChild(_highscoreLabel);
+    
+    // ハイスコアヘッダーの追加
     auto highscoreLabelHeader = Label::createWithSystemFont("HIGHSCORE", "Marker Felt", 16);
     highscoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     highscoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
@@ -263,13 +269,15 @@ Sprite* MainScene::addFruit()
     auto swing = Sequence::create(RotateTo::create(0.25, -30),
                                   RotateTo::create(0.25, 30),
                                   NULL); // 左右に揺れるアクション
+    auto fall = MoveTo::create(FALLING_DURATION, ground);
+    auto remove = CallFuncN::create([this](Node *n) {
+        this->removeFruit(dynamic_cast<Sprite *>(n));
+    });
     fruit->runAction(Sequence::create(ScaleTo::create(0.25, 1),
                                       Repeat::create(swing, 2),
                                       RotateTo::create(0, 0.125),
-                                      MoveTo::create(FALLING_DURATION, ground),
-                                      CallFuncN::create([this](Node *n) {
-        this->removeFruit(dynamic_cast<Sprite *>(n));
-    }),
+                                      fall,
+                                      remove,
                                       NULL));
     return fruit;
 }
