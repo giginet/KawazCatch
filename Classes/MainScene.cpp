@@ -392,10 +392,10 @@ void MainScene::onCatchBomb()
         auto frame = SpriteFrame::create("player_crash.png", rect) ;
         frames.pushBack(frame);
     }
-    auto animation = Animation::createWithSpriteFrames(frames, 1.0 / 60.0);
+    auto animation = Animation::createWithSpriteFrames(frames, 10.0 / 60.0);
     animation->setLoops(3);
+    animation->setRestoreOriginalFrame(true);
     _player->runAction(Sequence::create(Animate::create(animation),
-                                        DelayTime::create(3.0),
                                         CallFunc::create([this] {
         _isCrash = false;
     }),
