@@ -27,13 +27,13 @@ const float BOMB_PROBABILITY_BASE = 5;
 /// 黄金のフルーツが出る確率の増え幅
 const float GOLDEN_FRUIT_PROBABILITY_RATE = 0.1;
 /// 爆弾が出る確率の増え幅
-const int BOMB_PROBABILITY_RATE = 0.3;
+const float BOMB_PROBABILITY_RATE = 0.3;
 /// フルーツ出現頻度の初期値
 const float FRUIT_SPAWN_INCREASE_BASE = 2;
 /// フルーツ出現頻度の増加率
-const float FRUIT_SPAWN_INCREASE_RATE = 1.08f;
+const float FRUIT_SPAWN_INCREASE_RATE = 1.01f;
 /// フルーツ出現頻度の最大値
-const int MAXIMUM_SPAWN_PROBABILITY = 70;
+const float MAXIMUM_SPAWN_PROBABILITY = 50;
 
 
 Scene* MainScene::createScene()
@@ -200,11 +200,10 @@ Sprite* MainScene::addFruit()
     auto winSize = Director::getInstance()->getWinSize();
     // フルーツの種類を選択する
     int fruitType = 0;
-    int r = generateRandom(0, 100);
+    float r = generateRandom(0, 100);
     int pastSecond = TIME_LIMIT_SECOND - _second; // 経過時間
     float goldenFruitProbability = GOLDEN_FRUIT_PROBABILITY_BASE + GOLDEN_FRUIT_PROBABILITY_RATE * pastSecond;
     float bombProbability = BOMB_PROBABILITY_BASE + BOMB_PROBABILITY_RATE * pastSecond;
-
     if (r <= goldenFruitProbability) { // 黄金のフルーツ
         fruitType = static_cast<int>(FruitType::GOLDEN);
     } else if (r <= goldenFruitProbability + bombProbability) { // 爆弾
@@ -259,20 +258,24 @@ bool MainScene::removeFruit(cocos2d::Sprite *fruit)
 
 void MainScene::catchFruit(cocos2d::Sprite *fruit)
 {
+    auto audioEngine = CocosDenshion::SimpleAudioEngine::getInstance();
     // フルーツタイプの取得
     FruitType fruitType = static_cast<FruitType>(fruit->getTag());
     switch (fruitType) {
         case MainScene::FruitType::GOLDEN:
             // 黄金のフルーツのとき
             _score += 5;
+            audioEngine->playEffect("catch_golden.mp3");
             break;
         case MainScene::FruitType::BOMB:
             // 爆弾のとき
             this->onCatchBomb();
+            audioEngine->playEffect("catch_bomb.mp3");
             break;
         default:
             // その他のフルーツのとき
             _score += 1;
+            audioEngine->playEffect("catch_fruit.mp3");
             break;
     }
     
