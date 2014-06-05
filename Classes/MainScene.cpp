@@ -47,7 +47,6 @@ Scene* MainScene::createScene()
 MainScene::MainScene() :
 _score(0),
 _isCrash(false),
-_addFrameCount(0),
 _second(0),
 _state(GameState::READY),
 _player(NULL),
@@ -352,8 +351,20 @@ void MainScene::addResultMenu()
 void MainScene::onCatchBomb()
 {
     _isCrash = true; // クラッシュ状態
-    // ToDo アニメーション
-    _player->runAction(Sequence::create(DelayTime::create(3.0),
+    // アニメーションの作成
+    Vector<SpriteFrame *> frames;
+    auto playerSize = _player->getContentSize();
+    const int animationFrameCount = 3;
+    for (int i = 0; i < animationFrameCount; ++i) {
+        //auto filename = "player_crash" + std::to_string(i) + ".png";
+        auto filename = "player.png";
+        auto frame = SpriteFrame::create(filename, Rect(0, 0, playerSize.width, playerSize.height));
+        frames.pushBack(frame);
+    }
+    auto animation = Animation::createWithSpriteFrames(frames, 1.0 / 60.0);
+    animation->setLoops(3);
+    _player->runAction(Sequence::create(Animate::create(animation),
+                                        DelayTime::create(3.0),
                                         CallFunc::create([this] {
         _isCrash = false;
     }),
