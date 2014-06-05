@@ -27,7 +27,7 @@ const float BOMB_PROBABILITY_BASE = 5;
 /// 黄金のフルーツが出る確率の増え幅
 const float GOLDEN_FRUIT_PROBABILITY_RATE = 0.1;
 /// 爆弾が出る確率の増え幅
-const int BOMB_PROBABILITY_RATE = 0.15;
+const int BOMB_PROBABILITY_RATE = 0.3;
 /// フルーツ出現頻度の増加率
 const float FRUIT_SPAWN_INCREASE_RATE = 1.1f;
 /// フルーツ出現頻度の最大値
@@ -72,7 +72,7 @@ bool MainScene::init()
     
     // プレイヤーを表示する
     this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Vec2(size.width / 2.0, size.height - 455));
+    _player->setPosition(Vec2(size.width / 2.0, size.height - 445));
     this->addChild(_player);
     
     // イベントリスナーの追加
@@ -148,7 +148,7 @@ void MainScene::update(float dt)
         // フルーツの出現を判定する
         int p = MAX(static_cast<int>(powf(FRUIT_SPAWN_INCREASE_RATE, _second)),
                     MINIMUM_SPAWN_PROBABILITY);
-        int random = rand() % p;
+        int random = this->generateRandom(0, p);
         if (random == 0) {
             this->addFruit();
         }
@@ -197,7 +197,7 @@ Sprite* MainScene::addFruit()
     auto winSize = Director::getInstance()->getWinSize();
     // フルーツの種類を選択する
     int fruitType = 0;
-    int r = this->generateRandom(100);
+    int r = generateRandom(0, 100);
     int pastSecond = TIME_LIMIT_SECOND - _second; // 経過時間
     float goldenFruitProbability = GOLDEN_FRUIT_PROBABILITY_BASE + GOLDEN_FRUIT_PROBABILITY_RATE * pastSecond;
     float bombProbability = BOMB_PROBABILITY_BASE + BOMB_PROBABILITY_RATE * pastSecond;
@@ -207,7 +207,7 @@ Sprite* MainScene::addFruit()
     } else if (r <= goldenFruitProbability + bombProbability) { // 爆弾
         fruitType = static_cast<int>(FruitType::BOMB);
     } else { // その他のフルーツ
-        fruitType = this->generateRandom(NORMAL_FRUIT_COUNT - 1);
+        fruitType = rand() % NORMAL_FRUIT_COUNT;
     }
     
     // フルーツを作成する
@@ -218,8 +218,7 @@ Sprite* MainScene::addFruit()
     auto fruitSize = fruit->getContentSize();
     float min = fruitSize.width / 2.0;
     float max = winSize.width - fruitSize.width / 2.0;
-    std::uniform_int_distribution<float> posDist(min, max);
-    float fruitXPos = posDist(_engine);
+    float fruitXPos = generateRandom(min, max);
     
     fruit->setPosition(Vec2(fruitXPos,
                             winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
@@ -356,8 +355,8 @@ void MainScene::onCatchBomb()
     _score = MAX(0, _score - 4); // 0未満になったら0点にする
 }
 
-int MainScene::generateRandom(int n)
+float MainScene::generateRandom(float min, float max)
 {
-    std::uniform_int_distribution<> dist(0, n);
-    return dist(_engine);
+    std::uniform_real_distribution<float> dest(min, max - 1);
+    return dest(_engine);
 }

@@ -100,9 +100,12 @@ private:
      */
     void onCatchBomb();
     
-    /** 0 ~ nまでの値を返します
+    /** min ~ maxを含まない値までの乱数をfloatで返します
+     *  @param min 最小値
+     *  @param max 最大値
+     *  @return min <= n < maxの整数値
      */
-    int generateRandom(int n);
+    float generateRandom(float min, float max);
 };
 
 #endif /* defined(__KawazCatch__MainScene__) */
