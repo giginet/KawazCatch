@@ -50,7 +50,7 @@ Scene* MainScene::createScene()
 MainScene::MainScene() :
 _score(0),
 _isCrash(false),
-_second(0),
+_second(TIME_LIMIT_SECOND),
 _state(GameState::READY),
 _player(NULL),
 _secondLabel(NULL),
@@ -222,7 +222,7 @@ void MainScene::update(float dt)
                                                DelayTime::create(1.0),
                                                CallFunc::create([this] {
                 _state = GameState::RESULT;
-                this->addResultMenu();
+                this->onResult();
             }),
                                                NULL));
             this->addChild(finish);
@@ -356,16 +356,15 @@ void MainScene::addReadyLabel()
                                       NULL));
 }
 
-void MainScene::addResultMenu()
+void MainScene::onResult()
 {
-    // ENDING状態のとき
     _state = GameState::RESULT;
     auto winSize = Director::getInstance()->getWinSize();
     
     // 「もう一度遊ぶ」ボタン
     auto replayButton = MenuItemImage::create("replay_button.png",
                                               "replay_button_pressed.png",
-                                              [this](Ref* ref) {
+                                              [](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
@@ -374,7 +373,7 @@ void MainScene::addResultMenu()
     // 「タイトルへ戻る」ボタン
     auto titleButton = MenuItemImage::create("title_button.png",
                                              "title_button_pressed.png",
-                                             [this](Ref* ref) {
+                                             [](Ref* ref) {
                                                  // 「タイトルへ戻る」ボタンを押したときの処理
                                                  auto scene = TitleScene::createScene();
                                                  auto transition = TransitionCrossFade::create(0.5, scene);

@@ -50,6 +50,7 @@ bool TitleScene::init()
     // Touch to Startの追加
     auto touchToStart = Label::createWithSystemFont("Touch to Start", "Helvetica", 28);
     touchToStart->setPosition(Vec2(winSize.width / 2.0, 75));
+    // 点滅させるアクションの定義
     auto blink = Sequence::create(FadeTo::create(0.5, 127),
                                   FadeTo::create(0.5, 255),
                                   NULL);
@@ -60,14 +61,18 @@ bool TitleScene::init()
     auto listener = EventListenerTouchOneByOne::create();
     listener->onTouchBegan = [this](Touch* touch, Event* event) {
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
+        // 何度も押せないように一度押したらアクションを無効化する
         this->getEventDispatcher()->removeAllEventListeners();
-        this->runAction(Sequence::create(DelayTime::create(0.5),
-            
-                                         CallFunc::create([]{
+        // 0.5秒待ってからCallFuncを呼ぶ
+        auto delay = DelayTime::create(0.5);
+        // ゲームを始めるアクション
+        auto startGame = CallFunc::create([]{
             auto scene = MainScene::createScene();
             auto transition = TransitionPageTurn::create(0.5, scene, true);
             Director::getInstance()->replaceScene(transition);
-        }),
+        });
+        this->runAction(Sequence::create(delay,
+                                         startGame,
                                          NULL));
         return true;
     };

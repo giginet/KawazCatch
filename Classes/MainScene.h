@@ -92,9 +92,9 @@ private:
      */
     void addReadyLabel();
     
-    /** ゲーム終了後のメニューを追加します
+    /** ゲームが終了したときに呼び出されます
      */
-    void addResultMenu();
+    void onResult();
     
     /** 爆弾を取ってしまったときに呼び出されます
      */
