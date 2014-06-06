@@ -398,9 +398,13 @@ void MainScene::onResult()
     // ハイスコアの更新
     auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
     if (_score > highscore) {
-        _highscoreLabel->setString(std::to_string(highscore));
+        _highscoreLabel->setString(std::to_string(_score));
         UserDefault::getInstance()->setIntegerForKey(HIGHSCORE_KEY, _score);
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("highscore.mp3");
     }
+    
+    // BGMを鳴らす
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("result.mp3", true);
 }
 
 void MainScene::onCatchBomb()
