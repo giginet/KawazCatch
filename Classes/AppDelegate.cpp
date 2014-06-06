@@ -12,59 +12,71 @@ AppDelegate::~AppDelegate()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-    // initialize director
+    // ゲーム全体の設定
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("My Game");
+        // Windows版やMac版を作るときにウィンドウの名前を変更できる
+        glview = GLView::create("かわずたんキャッチ！");
         director->setOpenGLView(glview);
     }
     
-    // turn on display FPS
-    director->setDisplayStats(true);
+    // デバッグ用の情報を表示させる設定。ここでは表示させていない
+    director->setDisplayStats(false);
     
-    // set FPS. the default value is 1.0/60 if you don't call this
+    // FPS (Frame per Second)の設定。ここでは1秒間に60回更新される
     director->setAnimationInterval(1.0 / 60);
     
+    // Resourceの探索パスを設定する
     auto addPath = [](const char* path) {
         FileUtils::getInstance()->addSearchPath(path);
     };
     addPath("music");
     addPath("se");
     
-    // 画像リソースをセットする
+    // 画像リソースを振り分ける
+    // 画像リソースを検索する順番を定義する配列
     std::vector<std::string> searchResolutionOrder;
     auto platform = this->getTargetPlatform(); // 現在のプラットフォーム
-    auto frameSize = glview->getFrameSize();
-    if (platform == Platform::OS_IPHONE) {
-        if (frameSize.height > 480.f) { // Retina
+    auto frameSize = glview->getFrameSize(); // 現在の端末の画面サイズ
+    
+    if (platform == Platform::OS_IPHONE) { // もし、iPhoneなら
+        if (frameSize.height > 480.f) {
+            // Retinaディスプレイのとき
+            // 高解像度画像を有効にする
             director->setContentScaleFactor(2.0f);
-            if (frameSize.height == 1136) { // iPhone 4inch
+            if (frameSize.height == 1136) {
+                // iPhone 4inchのとき
+                // 4インチ対応の画面サイズに変更する
                 glview->setDesignResolutionSize(320, 568, ResolutionPolicy::NO_BORDER);
+                // Resources/4inchフォルダに画像ファイルがあれば、最優先で利用する
                 searchResolutionOrder.push_back("4inch");
-            } else { // 3.5インチ
+            } else {
+                // Retina 3.5インチのとき
                 glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
             }
             searchResolutionOrder.push_back("retina");
-        } else { // non-Retina
+        } else { // non-Retina 3.5インチ
             glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
         }
     } else if (platform == Platform::OS_ANDROID) {
+        // Android端末のとき
         glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
     }
     searchResolutionOrder.push_back("image");
+    // 画像の読み込み順を設定する
     FileUtils::getInstance()->setSearchResolutionsOrder(searchResolutionOrder);
     
-    // create a scene. it's an autorelease object
+    // 最初のシーンを作成する
     auto scene = TitleScene::createScene();
 
-    // run
+    // ゲームを開始する
     director->runWithScene(scene);
     
     return true;
 }
 
-// This function will be called when the app is inactive. When comes a phone call,it's be invoked too
+// このメソッドはアプリケーションがバックグラウンドに移動した時に呼び出されます
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
     
@@ -72,7 +84,7 @@ void AppDelegate::applicationDidEnterBackground() {
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
-// this function will be called when the app is active again
+// このメソッドはバックグラウンドに移動したアプリケーションが再び実行されたときに呼び出されます
 void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
     
