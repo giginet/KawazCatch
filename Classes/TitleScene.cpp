@@ -43,13 +43,13 @@ bool TitleScene::init()
     this->addChild(background);
     
     // ロゴの追加
-    auto logo = Sprite::create("logo.png");
+    auto logo = Sprite::create("title_logo.png");
     logo->setPosition(Vec2(winSize.width / 2.0, winSize.height - 150));
     this->addChild(logo);
     
     // Touch to Startの追加
-    auto touchToStart = Label::createWithSystemFont("Touch to Start", "Helvetica", 28);
-    touchToStart->setPosition(Vec2(winSize.width / 2.0, 75));
+    auto touchToStart = Sprite::create("title_start.png");
+    touchToStart->setPosition(Vec2(winSize.width / 2.0, 90));
     // 点滅させるアクションの定義
     auto blink = Sequence::create(FadeTo::create(0.5, 127),
                                   FadeTo::create(0.5, 255),
