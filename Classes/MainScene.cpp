@@ -21,19 +21,19 @@ const float FALLING_DURATION = 3.0;
 /// ふつうのフルーツの数
 const int NORMAL_FRUIT_COUNT = 5;
 /// 黄金のフルーツが出る確率の初期値
-const float GOLDEN_FRUIT_PROBABILITY_BASE = 2;
+const float GOLDEN_FRUIT_PROBABILITY_BASE = 0.02;
 /// 爆弾が出る確率の初期値
-const float BOMB_PROBABILITY_BASE = 5;
+const float BOMB_PROBABILITY_BASE = 0.05;
 /// 黄金のフルーツが出る確率の増え幅
-const float GOLDEN_FRUIT_PROBABILITY_RATE = 0.1;
+const float GOLDEN_FRUIT_PROBABILITY_RATE = 0.001;
 /// 爆弾が出る確率の増え幅
-const float BOMB_PROBABILITY_RATE = 0.3;
+const float BOMB_PROBABILITY_RATE = 0.003;
 /// フルーツ出現頻度の初期値
-const float FRUIT_SPAWN_INCREASE_BASE = 2;
+const float FRUIT_SPAWN_INCREASE_BASE = 0.02;
 /// フルーツ出現頻度の増加率
-const float FRUIT_SPAWN_INCREASE_RATE = 1.01f;
+const float FRUIT_SPAWN_INCREASE_RATE = 1.05f;
 /// フルーツ出現頻度の最大値
-const float MAXIMUM_SPAWN_PROBABILITY = 50;
+const float MAXIMUM_SPAWN_PROBABILITY = 0.5;
 /// 爆弾を取ったときに減点される点数
 const int BOMB_PENALTY_SCORE = 4;
 /// ハイスコア格納用のキー
@@ -184,9 +184,9 @@ void MainScene::update(float dt)
         
         // フルーツの出現を判定する
         float pastTime = TIME_LIMIT_SECOND - _second;
-        float p = FRUIT_SPAWN_INCREASE_BASE + powf(FRUIT_SPAWN_INCREASE_RATE, pastTime);
+        float p = FRUIT_SPAWN_INCREASE_BASE * (1 + powf(FRUIT_SPAWN_INCREASE_RATE, pastTime));
         p = MIN(p, MAXIMUM_SPAWN_PROBABILITY); // pが最大値以上なら丸める
-        int random = this->generateRandom(0, 100);
+        float random = this->generateRandom(0, 1);
         if (random < p) {
             this->addFruit();
         }
@@ -236,7 +236,7 @@ Sprite* MainScene::addFruit()
     auto winSize = Director::getInstance()->getWinSize();
     // フルーツの種類を選択する
     int fruitType = 0;
-    float r = generateRandom(0, 100);
+    float r = generateRandom(0, 1);
     int pastSecond = TIME_LIMIT_SECOND - _second; // 経過時間
     float goldenFruitProbability = GOLDEN_FRUIT_PROBABILITY_BASE + GOLDEN_FRUIT_PROBABILITY_RATE * pastSecond;
     float bombProbability = BOMB_PROBABILITY_BASE + BOMB_PROBABILITY_RATE * pastSecond;
@@ -245,7 +245,7 @@ Sprite* MainScene::addFruit()
     } else if (r <= goldenFruitProbability + bombProbability) { // 爆弾
         fruitType = static_cast<int>(FruitType::BOMB);
     } else { // その他のフルーツ
-        fruitType = rand() % NORMAL_FRUIT_COUNT;
+        fruitType = round(generateRandom(0, NORMAL_FRUIT_COUNT));
     }
     
     // フルーツを作成する
@@ -273,9 +273,18 @@ Sprite* MainScene::addFruit()
     auto remove = CallFuncN::create([this](Node *n) {
         this->removeFruit(dynamic_cast<Sprite *>(n));
     });
+    auto playSound = CallFunc::create([fruitType] {
+        if (fruitType == static_cast<int>(FruitType::GOLDEN)) {
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("golden.mp3");
+            
+        } else if (fruitType == static_cast<int>(FruitType::BOMB)) {
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("bomb.mp3");
+        }
+    });
     fruit->runAction(Sequence::create(ScaleTo::create(0.25, 1),
                                       Repeat::create(swing, 2),
                                       RotateTo::create(0, 0.125),
+                                      playSound,
                                       fall,
                                       remove,
                                       NULL));
