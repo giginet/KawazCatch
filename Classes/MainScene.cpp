@@ -106,7 +106,7 @@ bool MainScene::init()
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     // スコアラベルの追加
-    auto scoreLabel = Label::createWithSystemFont(std::to_string(_score), "Marker Felt", 16);
+    auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "Marker Felt", 16);
     scoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     scoreLabel->enableOutline(Color4B::BLACK, 1.5);
     this->setScoreLabel(scoreLabel);
@@ -122,7 +122,7 @@ bool MainScene::init()
     
     // タイマーラベルの追加
     _second = TIME_LIMIT_SECOND;
-    auto secondLabel = Label::createWithSystemFont(std::to_string(static_cast<int>(_second)), "Marker Felt", 16);
+    auto secondLabel = Label::createWithSystemFont(StringUtils::toString(static_cast<int>(_second)), "Marker Felt", 16);
     secondLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     secondLabel->enableOutline(Color4B::BLACK, 1.5);
     secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 40));
@@ -138,7 +138,7 @@ bool MainScene::init()
     
     // ハイスコアラベルの追加
     auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
-    auto highscoreLabel = Label::createWithSystemFont(std::to_string(static_cast<int>(highscore)), "Marker Felt", 16);
+    auto highscoreLabel = Label::createWithSystemFont(StringUtils::toString(static_cast<int>(highscore)), "Marker Felt", 16);
     highscoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     highscoreLabel->enableOutline(Color4B::BLACK, 1.5);
     highscoreLabel->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 40));
@@ -202,7 +202,7 @@ void MainScene::update(float dt)
         
         // 制限時間を更新する
         _second -= dt;
-        _secondLabel->setString(std::to_string(static_cast<int>(_second)));
+        _secondLabel->setString(StringUtils::toString(static_cast<int>(_second)));
         if (_second < 0) { // 制限時間が0未満になったとき
             _state = GameState::ENDING; // ゲーム状態をENDINGに移行
             // 終了文字の表示
@@ -249,7 +249,7 @@ Sprite* MainScene::addFruit()
     }
     
     // フルーツを作成する
-    std::string filename = "fruit" + std::to_string(fruitType) + ".png";
+    std::string filename = "fruit" + StringUtils::toString(fruitType) + ".png";
     auto fruit = Sprite::create(filename);
     fruit->setTag(fruitType);
     
@@ -330,7 +330,7 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
     this->removeFruit(fruit);
     
     // スコアの更新
-    _scoreLabel->setString(std::to_string(_score));
+    _scoreLabel->setString(StringUtils::toString(_score));
 }
 
 void MainScene::addReadyLabel()
@@ -398,7 +398,7 @@ void MainScene::onResult()
     // ハイスコアの更新
     auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
     if (_score > highscore) {
-        _highscoreLabel->setString(std::to_string(_score));
+        _highscoreLabel->setString(StringUtils::toString(_score));
         UserDefault::getInstance()->setIntegerForKey(HIGHSCORE_KEY, _score);
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("highscore.mp3");
     }
