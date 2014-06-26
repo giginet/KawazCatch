@@ -31,7 +31,7 @@ const float BOMB_PROBABILITY_RATE = 0.003;
 /// フルーツ出現頻度の初期値
 const float FRUIT_SPAWN_INCREASE_BASE = 0.02;
 /// フルーツ出現頻度の増加率
-const float FRUIT_SPAWN_INCREASE_RATE = 1.05f;
+const float FRUIT_SPAWN_INCREASE_RATE = 1.03f;
 /// フルーツ出現頻度の最大値
 const float MAXIMUM_SPAWN_PROBABILITY = 0.5;
 /// 爆弾を取ったときに減点される点数
@@ -394,7 +394,7 @@ void MainScene::onResult()
     
     // メニューの作成
     auto menu = Menu::create(replayButton, titleButton, NULL);
-    menu->alignItemsVerticallyWithPadding(15); // ボタンを縦に並べる
+    menu->alignItemsVerticallyWithPadding(30); // ボタンを縦に並べる
     menu->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
     
