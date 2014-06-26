@@ -318,6 +318,7 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
             // 爆弾のとき
             this->onCatchBomb();
             audioEngine->playEffect("catch_bomb.mp3");
+            this->addBombEffect(fruit->getPosition());
             break;
         default:
             // その他のフルーツのとき
@@ -375,6 +376,7 @@ void MainScene::onResult()
                                               "replay_button_pressed.png",
                                               [](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
+                                                  CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
                                                   Director::getInstance()->replaceScene(transition);
@@ -384,6 +386,7 @@ void MainScene::onResult()
                                              "title_button_pressed.png",
                                              [](Ref* ref) {
                                                  // 「タイトルへ戻る」ボタンを押したときの処理
+                                                 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
                                                  auto scene = TitleScene::createScene();
                                                  auto transition = TransitionCrossFade::create(0.5, scene);
                                                  Director::getInstance()->replaceScene(transition);
@@ -435,4 +438,33 @@ float MainScene::generateRandom(float min, float max)
 {
     std::uniform_real_distribution<float> dest(min, max);
     return dest(_engine);
+}
+
+void MainScene::addBombEffect(cocos2d::Vec2 position)
+{
+    auto effect = Sprite::create("bomb_effect.png");
+    auto size = effect->getContentSize();
+    const int frameCount = 3;
+    auto frameWidth = size.width / frameCount;
+    
+    effect->setTextureRect(Rect(0, 0, frameWidth, size.height));
+    effect->setPosition(position);
+    effect->setOpacity(0);
+    Vector<SpriteFrame *> frames;
+    auto frame0 = SpriteFrame::create("bomb_effect.png", Rect(0, 0, frameWidth, size.height));
+    auto frame1 = SpriteFrame::create("bomb_effect.png", Rect(frameWidth, 0, frameWidth, size.height));
+    auto frame2 = SpriteFrame::create("bomb_effect.png", Rect(frameWidth * 2, 0, frameWidth, size.height));
+    frames.pushBack(frame0);
+    frames.pushBack(frame1);
+    frames.pushBack(frame2);
+    
+    auto animation = Animation::createWithSpriteFrames(frames, 0.1);
+    
+    effect->runAction(Sequence::create(FadeIn::create(0.25),
+                                       Animate::create(animation),
+                                       DelayTime::create(0.5),
+                                       FadeOut::create(0.25),
+                                       RemoveSelf::create(),
+                                       NULL));
+    this->addChild(effect);
 }
