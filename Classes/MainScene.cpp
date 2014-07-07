@@ -31,7 +31,7 @@ const float BOMB_PROBABILITY_RATE = 0.003;
 /// フルーツ出現頻度の初期値
 const float FRUIT_SPAWN_INCREASE_BASE = 0.02;
 /// フルーツ出現頻度の増加率
-const float FRUIT_SPAWN_INCREASE_RATE = 1.05f;
+const float FRUIT_SPAWN_INCREASE_RATE = 1.03f;
 /// フルーツ出現頻度の最大値
 const float MAXIMUM_SPAWN_PROBABILITY = 0.5;
 /// 爆弾を取ったときに減点される点数
@@ -318,6 +318,7 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
             // 爆弾のとき
             this->onCatchBomb();
             audioEngine->playEffect("catch_bomb.mp3");
+            this->addBombEffect(fruit->getPosition());
             break;
         default:
             // その他のフルーツのとき
@@ -375,6 +376,7 @@ void MainScene::onResult()
                                               "replay_button_pressed.png",
                                               [](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
+                                                  CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
                                                   Director::getInstance()->replaceScene(transition);
@@ -384,6 +386,7 @@ void MainScene::onResult()
                                              "title_button_pressed.png",
                                              [](Ref* ref) {
                                                  // 「タイトルへ戻る」ボタンを押したときの処理
+                                                 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
                                                  auto scene = TitleScene::createScene();
                                                  auto transition = TransitionCrossFade::create(0.5, scene);
                                                  Director::getInstance()->replaceScene(transition);
@@ -391,7 +394,7 @@ void MainScene::onResult()
     
     // メニューの作成
     auto menu = Menu::create(replayButton, titleButton, NULL);
-    menu->alignItemsVerticallyWithPadding(15); // ボタンを縦に並べる
+    menu->alignItemsVerticallyWithPadding(30); // ボタンを縦に並べる
     menu->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
     this->addChild(menu);
     
@@ -435,4 +438,33 @@ float MainScene::generateRandom(float min, float max)
 {
     std::uniform_real_distribution<float> dest(min, max);
     return dest(_engine);
+}
+
+void MainScene::addBombEffect(cocos2d::Vec2 position)
+{
+    auto effect = Sprite::create("bomb_effect.png");
+    auto size = effect->getContentSize();
+    const int frameCount = 3;
+    auto frameWidth = size.width / frameCount;
+    
+    effect->setTextureRect(Rect(0, 0, frameWidth, size.height));
+    effect->setPosition(position);
+    effect->setOpacity(0);
+    Vector<SpriteFrame *> frames;
+    auto frame0 = SpriteFrame::create("bomb_effect.png", Rect(0, 0, frameWidth, size.height));
+    auto frame1 = SpriteFrame::create("bomb_effect.png", Rect(frameWidth, 0, frameWidth, size.height));
+    auto frame2 = SpriteFrame::create("bomb_effect.png", Rect(frameWidth * 2, 0, frameWidth, size.height));
+    frames.pushBack(frame0);
+    frames.pushBack(frame1);
+    frames.pushBack(frame2);
+    
+    auto animation = Animation::createWithSpriteFrames(frames, 0.1);
+    
+    effect->runAction(Sequence::create(FadeIn::create(0.25),
+                                       Animate::create(animation),
+                                       DelayTime::create(0.5),
+                                       FadeOut::create(0.25),
+                                       RemoveSelf::create(),
+                                       NULL));
+    this->addChild(effect);
 }

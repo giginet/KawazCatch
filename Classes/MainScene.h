@@ -106,6 +106,11 @@ private:
      *  @return min <= n < maxの整数値
      */
     float generateRandom(float min, float max);
+    
+    /** 指定位置に爆弾のエフェクトを表示します
+     *  @param position 表示する位置
+     */
+    void addBombEffect(cocos2d::Vec2 position);
 };
 
 #endif /* defined(__KawazCatch__MainScene__) */
