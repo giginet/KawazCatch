@@ -55,7 +55,8 @@ _state(GameState::READY),
 _player(NULL),
 _secondLabel(NULL),
 _scoreLabel(NULL),
-_highscoreLabel(NULL)
+_highscoreLabel(NULL),
+_fruitBatchNode(NULL)
 {
     // 乱数の初期化
     std::random_device rdev;
@@ -152,6 +153,10 @@ bool MainScene::init()
     highscoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 20));
     this->addChild(highscoreLabelHeader);
     
+    auto fruits = SpriteBatchNode::create("fruits.png");
+    this->addChild(fruits);
+    this->setFruitsBatchNode(fruits);
+    
     this->scheduleUpdate();
     
     return true;
@@ -160,6 +165,7 @@ bool MainScene::init()
 MainScene::~MainScene()
 {
     // デストラクタ
+    CC_SAFE_RELEASE_NULL(_fruitBatchNode);
     CC_SAFE_RELEASE_NULL(_player);
     CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_secondLabel);
@@ -249,18 +255,17 @@ Sprite* MainScene::addFruit()
     }
     
     // フルーツを作成する
-    std::string filename = "fruit" + StringUtils::toString(fruitType) + ".png";
-    auto fruit = Sprite::create(filename);
+    const auto fruitSize = Size(32, 32);
+    auto fruit = Sprite::create("fruits.png", Rect(fruitType * fruitSize.width, 0, fruitSize.width, fruitSize.height));
     fruit->setTag(fruitType);
     
-    auto fruitSize = fruit->getContentSize();
     float min = fruitSize.width / 2.0;
     float max = winSize.width - fruitSize.width / 2.0;
     float fruitXPos = generateRandom(min, max);
     
     fruit->setPosition(Vec2(fruitXPos,
                             winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
-    this->addChild(fruit);
+    _fruitBatchNode->addChild(fruit);
     _fruits.pushBack(fruit);
     
     // フルーツに動きをつける
@@ -454,7 +459,8 @@ void MainScene::addBombEffect(cocos2d::Vec2 position)
     effect->setOpacity(0);
     Vector<SpriteFrame *> frames;
     for (int i = 0; i < frameCount; ++i) {
-        auto frame = SpriteFrame::create("bomb_effect.png", Rect(frameWidth * i, 0, frameWidth, size.height));
+        auto frame = SpriteFrame::create("bomb_effect.png",
+                                         Rect(frameWidth * i, 0, frameWidth, size.height));
         frames.pushBack(frame);
     }
     auto animation = Animation::createWithSpriteFrames(frames, 0.05);
