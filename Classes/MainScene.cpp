@@ -412,26 +412,28 @@ void MainScene::onResult()
 
 void MainScene::onCatchBomb()
 {
-    _isCrash = true; // クラッシュ状態
-    // アニメーションの作成
-    Vector<SpriteFrame *> frames;
-    auto playerSize = _player->getContentSize();
-    const int animationFrameCount = 3;
-    for (int i = 0; i < animationFrameCount; ++i) {
-        auto rect = Rect(playerSize.width * i, 0, playerSize.width, playerSize.height);
-        auto frame = SpriteFrame::create("player_crash.png", rect) ;
-        frames.pushBack(frame);
+    if (!this->getIsCrash()) {
+        _isCrash = true; // クラッシュ状態
+        // アニメーションの作成
+        Vector<SpriteFrame *> frames;
+        const auto playerSize = Size(85, 63);
+        const int animationFrameCount = 3;
+        for (int i = 0; i < animationFrameCount; ++i) {
+            auto rect = Rect(playerSize.width * i, 0, playerSize.width, playerSize.height);
+            auto frame = SpriteFrame::create("player_crash.png", rect) ;
+            frames.pushBack(frame);
+        }
+        auto animation = Animation::createWithSpriteFrames(frames, 10.0 / 60.0);
+        animation->setLoops(3);
+        animation->setRestoreOriginalFrame(true);
+        _player->runAction(Sequence::create(Animate::create(animation),
+                                            CallFunc::create([this] {
+            _isCrash = false;
+        }),
+                                            NULL));
+        _score = MAX(0, _score - BOMB_PENALTY_SCORE); // 0未満になったら0点にする
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
     }
-    auto animation = Animation::createWithSpriteFrames(frames, 10.0 / 60.0);
-    animation->setLoops(3);
-    animation->setRestoreOriginalFrame(true);
-    _player->runAction(Sequence::create(Animate::create(animation),
-                                        CallFunc::create([this] {
-        _isCrash = false;
-    }),
-                                        NULL));
-    _score = MAX(0, _score - BOMB_PENALTY_SCORE); // 0未満になったら0点にする
-    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
 }
 
 float MainScene::generateRandom(float min, float max)
@@ -451,19 +453,14 @@ void MainScene::addBombEffect(cocos2d::Vec2 position)
     effect->setPosition(position);
     effect->setOpacity(0);
     Vector<SpriteFrame *> frames;
-    auto frame0 = SpriteFrame::create("bomb_effect.png", Rect(0, 0, frameWidth, size.height));
-    auto frame1 = SpriteFrame::create("bomb_effect.png", Rect(frameWidth, 0, frameWidth, size.height));
-    auto frame2 = SpriteFrame::create("bomb_effect.png", Rect(frameWidth * 2, 0, frameWidth, size.height));
-    frames.pushBack(frame0);
-    frames.pushBack(frame1);
-    frames.pushBack(frame2);
-    
-    auto animation = Animation::createWithSpriteFrames(frames, 0.1);
-    
-    effect->runAction(Sequence::create(FadeIn::create(0.25),
+    for (int i = 0; i < frameCount; ++i) {
+        auto frame = SpriteFrame::create("bomb_effect.png", Rect(frameWidth * i, 0, frameWidth, size.height));
+        frames.pushBack(frame);
+    }
+    auto animation = Animation::createWithSpriteFrames(frames, 0.05);
+    effect->runAction(Sequence::create(FadeIn::create(0.1),
                                        Animate::create(animation),
-                                       DelayTime::create(0.5),
-                                       FadeOut::create(0.25),
+                                       FadeOut::create(0.1),
                                        RemoveSelf::create(),
                                        NULL));
     this->addChild(effect);
