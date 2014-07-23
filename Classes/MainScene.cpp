@@ -56,7 +56,7 @@ _player(NULL),
 _secondLabel(NULL),
 _scoreLabel(NULL),
 _highscoreLabel(NULL),
-_fruitBatchNode(NULL)
+_fruitsBatchNode(NULL)
 {
     // 乱数の初期化
     std::random_device rdev;
@@ -153,6 +153,7 @@ bool MainScene::init()
     highscoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 20));
     this->addChild(highscoreLabelHeader);
     
+    // BatchNodeの初期化
     auto fruits = SpriteBatchNode::create("fruits.png");
     this->addChild(fruits);
     this->setFruitsBatchNode(fruits);
@@ -165,11 +166,11 @@ bool MainScene::init()
 MainScene::~MainScene()
 {
     // デストラクタ
-    CC_SAFE_RELEASE_NULL(_fruitBatchNode);
     CC_SAFE_RELEASE_NULL(_player);
-    CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_secondLabel);
+    CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_highscoreLabel);
+    CC_SAFE_RELEASE_NULL(_fruitsBatchNode);
 }
 
 void MainScene::onEnterTransitionDidFinish()
@@ -255,17 +256,25 @@ Sprite* MainScene::addFruit()
     }
     
     // フルーツを作成する
-    const auto fruitSize = Size(32, 32);
-    auto fruit = Sprite::create("fruits.png", Rect(fruitType * fruitSize.width, 0, fruitSize.width, fruitSize.height));
+    // テクスチャのサイズを取り出す
+    auto textureSize = _fruitsBatchNode->getTextureAtlas()->getTexture()->getContentSize();
+    // テクスチャの横幅を個数で割った物がフルーツ1個の幅になる
+    auto fruitWidth = textureSize.width / static_cast<int>(FruitType::COUNT);
+    auto fruit = Sprite::create("fruits.png", Rect(fruitType *
+                                                   fruitWidth,
+                                                   0,
+                                                   fruitWidth,
+                                                   textureSize.height));
     fruit->setTag(fruitType);
-    
+    auto fruitSize = fruit->getContentSize();
+
     float min = fruitSize.width / 2.0;
     float max = winSize.width - fruitSize.width / 2.0;
     float fruitXPos = generateRandom(min, max);
     
     fruit->setPosition(Vec2(fruitXPos,
                             winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
-    _fruitBatchNode->addChild(fruit);
+    _fruitsBatchNode->addChild(fruit);
     _fruits.pushBack(fruit);
     
     // フルーツに動きをつける
