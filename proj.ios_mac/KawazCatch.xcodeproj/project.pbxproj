@@ -11,15 +11,12 @@
 		0731228C193EC5A9006203E7 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07312287193EC5A9006203E7 /* MainScene.cpp */; };
 		0731228D193EC5A9006203E7 /* TitleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07312289193EC5A9006203E7 /* TitleScene.cpp */; };
 		0731228E193EC5A9006203E7 /* TitleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07312289193EC5A9006203E7 /* TitleScene.cpp */; };
-		073122C8193ECA74006203E7 /* 4inch in Resources */ = {isa = PBXBuildFile; fileRef = 073122C5193ECA74006203E7 /* 4inch */; };
-		073122C9193ECA74006203E7 /* 4inch in Resources */ = {isa = PBXBuildFile; fileRef = 073122C5193ECA74006203E7 /* 4inch */; };
-		073122CC193ECA74006203E7 /* retina in Resources */ = {isa = PBXBuildFile; fileRef = 073122C7193ECA74006203E7 /* retina */; };
-		073122CD193ECA74006203E7 /* retina in Resources */ = {isa = PBXBuildFile; fileRef = 073122C7193ECA74006203E7 /* retina */; };
-		073122CF193ECC49006203E7 /* image in Resources */ = {isa = PBXBuildFile; fileRef = 073122CE193ECC49006203E7 /* image */; };
-		073122D0193ECC49006203E7 /* image in Resources */ = {isa = PBXBuildFile; fileRef = 073122CE193ECC49006203E7 /* image */; };
 		07B0344D19401E630012A581 /* se in Resources */ = {isa = PBXBuildFile; fileRef = 07B0344C19401E630012A581 /* se */; };
 		07B0344E19401E630012A581 /* se in Resources */ = {isa = PBXBuildFile; fileRef = 07B0344C19401E630012A581 /* se */; };
-		07B0345419424C6F0012A581 /* music in Resources */ = {isa = PBXBuildFile; fileRef = 07B0345319424C6F0012A581 /* music */; };
+		07C12E9D197F833400764C3A /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = 07C12E9C197F833400764C3A /* bgm */; };
+		07C12E9E197F833400764C3A /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = 07C12E9C197F833400764C3A /* bgm */; };
+		07C12EA0197F83AF00764C3A /* images in Resources */ = {isa = PBXBuildFile; fileRef = 07C12E9F197F83AF00764C3A /* images */; };
+		07C12EA1197F83AF00764C3A /* images in Resources */ = {isa = PBXBuildFile; fileRef = 07C12E9F197F83AF00764C3A /* images */; };
 		1AC6FB1F180E996B004C840B /* libbox2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFF180E9839004C840B /* libbox2d Mac.a */; };
 		1AC6FB20180E996B004C840B /* libchipmunk Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFD180E9839004C840B /* libchipmunk Mac.a */; };
 		1AC6FB21180E996B004C840B /* libcocos2dx Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2dx Mac.a */; };
@@ -224,11 +221,9 @@
 		07312288193EC5A9006203E7 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainScene.h; path = ../Classes/MainScene.h; sourceTree = "<group>"; };
 		07312289193EC5A9006203E7 /* TitleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = TitleScene.cpp; path = ../Classes/TitleScene.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		0731228A193EC5A9006203E7 /* TitleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TitleScene.h; path = ../Classes/TitleScene.h; sourceTree = "<group>"; };
-		073122C5193ECA74006203E7 /* 4inch */ = {isa = PBXFileReference; lastKnownFileType = folder; path = 4inch; sourceTree = "<group>"; };
-		073122C7193ECA74006203E7 /* retina */ = {isa = PBXFileReference; lastKnownFileType = folder; path = retina; sourceTree = "<group>"; };
-		073122CE193ECC49006203E7 /* image */ = {isa = PBXFileReference; lastKnownFileType = folder; path = image; sourceTree = "<group>"; };
 		07B0344C19401E630012A581 /* se */ = {isa = PBXFileReference; lastKnownFileType = folder; path = se; sourceTree = "<group>"; };
-		07B0345319424C6F0012A581 /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; path = music; sourceTree = "<group>"; };
+		07C12E9C197F833400764C3A /* bgm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bgm; sourceTree = "<group>"; };
+		07C12E9F197F83AF00764C3A /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
@@ -466,11 +461,9 @@
 		78C7DDAA14EBA5050085D0C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				07B0345319424C6F0012A581 /* music */,
+				07C12E9F197F83AF00764C3A /* images */,
+				07C12E9C197F833400764C3A /* bgm */,
 				07B0344C19401E630012A581 /* se */,
-				073122C5193ECA74006203E7 /* 4inch */,
-				073122CE193ECC49006203E7 /* image */,
-				073122C7193ECA74006203E7 /* retina */,
 			);
 			name = Resources;
 			path = ../Resources;
@@ -640,23 +633,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07C12EA0197F83AF00764C3A /* images in Resources */,
 				5087E78117EB970100C73F5D /* Icon-120.png in Resources */,
 				5087E78617EB970100C73F5D /* Icon-76.png in Resources */,
 				5087E77F17EB970100C73F5D /* Default@2x.png in Resources */,
-				073122C8193ECA74006203E7 /* 4inch in Resources */,
+				07C12E9D197F833400764C3A /* bgm in Resources */,
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
-				073122CC193ECA74006203E7 /* retina in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				07B0344D19401E630012A581 /* se in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
-				07B0345419424C6F0012A581 /* music in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
-				073122CF193ECC49006203E7 /* image in Resources */,
 				50EF629817ECD46A001EB2F8 /* Icon-80.png in Resources */,
 				5087E78417EB970100C73F5D /* Icon-57.png in Resources */,
 				5087E77E17EB970100C73F5D /* Default.png in Resources */,
@@ -668,11 +659,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07C12EA1197F83AF00764C3A /* images in Resources */,
 				07B0344E19401E630012A581 /* se in Resources */,
-				073122D0193ECC49006203E7 /* image in Resources */,
-				073122CD193ECA74006203E7 /* retina in Resources */,
+				07C12E9E197F833400764C3A /* bgm in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
-				073122C9193ECA74006203E7 /* 4inch in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

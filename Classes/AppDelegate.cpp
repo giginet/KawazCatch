@@ -31,7 +31,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto addPath = [](const char* path) {
         FileUtils::getInstance()->addSearchPath(path);
     };
-    addPath("music");
+    addPath("bgm");
     addPath("se");
     
     // 画像リソースを振り分ける
@@ -50,12 +50,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
                 // 4インチ対応の画面サイズに変更する
                 glview->setDesignResolutionSize(320, 568, ResolutionPolicy::NO_BORDER);
                 // Resources/4inchフォルダに画像ファイルがあれば、最優先で利用する
-                searchResolutionOrder.push_back("4inch");
+                searchResolutionOrder.push_back("images/4inch");
             } else {
                 // Retina 3.5インチのとき
                 glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
             }
-            searchResolutionOrder.push_back("retina");
+            searchResolutionOrder.push_back("images/retina");
         } else { // non-Retina 3.5インチ
             glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
         }
@@ -63,7 +63,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         // Android端末のとき
         glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
     }
-    searchResolutionOrder.push_back("image");
+    searchResolutionOrder.push_back("images/nonretina");
     // 画像の読み込み順を設定する
     FileUtils::getInstance()->setSearchResolutionsOrder(searchResolutionOrder);
     
