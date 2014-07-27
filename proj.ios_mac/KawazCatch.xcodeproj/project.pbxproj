@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0708A8651984D8A00000C29C /* AudioUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0708A8631984D8A00000C29C /* AudioUtils.cpp */; };
 		0731228B193EC5A9006203E7 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07312287193EC5A9006203E7 /* MainScene.cpp */; };
 		0731228C193EC5A9006203E7 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07312287193EC5A9006203E7 /* MainScene.cpp */; };
 		0731228D193EC5A9006203E7 /* TitleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07312289193EC5A9006203E7 /* TitleScene.cpp */; };
@@ -217,6 +218,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0708A8631984D8A00000C29C /* AudioUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioUtils.cpp; path = ../Classes/AudioUtils.cpp; sourceTree = "<group>"; };
+		0708A8641984D8A00000C29C /* AudioUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioUtils.h; path = ../Classes/AudioUtils.h; sourceTree = "<group>"; };
 		07312287193EC5A9006203E7 /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = MainScene.cpp; path = ../Classes/MainScene.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		07312288193EC5A9006203E7 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainScene.h; path = ../Classes/MainScene.h; sourceTree = "<group>"; };
 		07312289193EC5A9006203E7 /* TitleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = TitleScene.cpp; path = ../Classes/TitleScene.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -346,6 +349,8 @@
 				07312288193EC5A9006203E7 /* MainScene.h */,
 				07312289193EC5A9006203E7 /* TitleScene.cpp */,
 				0731228A193EC5A9006203E7 /* TitleScene.h */,
+				0708A8631984D8A00000C29C /* AudioUtils.cpp */,
+				0708A8641984D8A00000C29C /* AudioUtils.h */,
 			);
 			name = Classes;
 			path = ../classes;
@@ -673,6 +678,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0708A8651984D8A00000C29C /* AudioUtils.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
 				0731228B193EC5A9006203E7 /* MainScene.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,

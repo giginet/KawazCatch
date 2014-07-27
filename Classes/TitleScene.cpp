@@ -9,6 +9,7 @@
 #include "TitleScene.h"
 #include "MainScene.h"
 #include "SimpleAudioEngine.h"
+#include "AudioUtils.h"
 
 USING_NS_CC;
 
@@ -60,7 +61,7 @@ bool TitleScene::init()
     // 画面をタッチしたときにメイン画面へ遷移
     auto listener = EventListenerTouchOneByOne::create();
     listener->onTouchBegan = [this](Touch* touch, Event* event) {
-        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("decide").c_str());
         // 何度も押せないように一度押したらアクションを無効化する
         this->getEventDispatcher()->removeAllEventListeners();
         // 0.5秒待ってからCallFuncを呼ぶ
@@ -84,5 +85,5 @@ bool TitleScene::init()
 void TitleScene::onEnterTransitionDidFinish()
 {
     // BGMの再生
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("title.mp3");
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("title").c_str());
 }
