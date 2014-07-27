@@ -41,6 +41,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto frameSize = glview->getFrameSize(); // 現在の端末の画面サイズ
     
     if (platform == Platform::OS_IPHONE) { // もし、iPhoneなら
+        addPath("bgm/caf");
+        addPath("se/caf");
         if (frameSize.height > 480.f) {
             // Retinaディスプレイのとき
             // 高解像度画像を有効にする
@@ -61,6 +63,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
         }
     } else if (platform == Platform::OS_ANDROID) {
         // Android端末のとき
+        addPath("bgm/ogg");
+        addPath("se/ogg");
         glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
     }
     searchResolutionOrder.push_back("images/nonretina");
