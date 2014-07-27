@@ -177,9 +177,6 @@ void MainScene::onEnterTransitionDidFinish()
     // シーン遷移が完了したとき
     Layer::onEnterTransitionDidFinish();
     
-    // BGMを鳴らす
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
-    
     // 「READY」演出を行う
     this->addReadyLabel();
 }
@@ -366,6 +363,8 @@ void MainScene::addReadyLabel()
         this->addChild(start); // 「スタート」のラベルを追加する（この時点でスタートのアニメーションが始まる）
         _state = GameState::PLAYING; // ゲーム状態をPLAYINGに切り替える
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("start.mp3");
+        // BGMを鳴らす
+        CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
     }),
                                       RemoveSelf::create(), // 自分を削除する
                                       NULL));
