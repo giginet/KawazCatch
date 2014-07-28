@@ -71,6 +71,7 @@ bool TitleScene::init()
             auto scene = MainScene::createScene();
             auto transition = TransitionPageTurn::create(0.5, scene, true);
             Director::getInstance()->replaceScene(transition);
+            CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
         });
         this->runAction(Sequence::create(delay,
                                          startGame,

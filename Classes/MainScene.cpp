@@ -192,7 +192,7 @@ void MainScene::update(float dt)
         float p = FRUIT_SPAWN_INCREASE_BASE * (1 + powf(FRUIT_SPAWN_INCREASE_RATE, pastTime));
         p = MIN(p, MAXIMUM_SPAWN_PROBABILITY); // pが最大値以上なら丸める
         float random = this->generateRandom(0, 1);
-        if (random < p) {
+        if (random < p && _second >= 5) {
             this->addFruit();
         }
         
@@ -374,7 +374,7 @@ void MainScene::addReadyLabel()
         _state = GameState::PLAYING; // ゲーム状態をPLAYINGに切り替える
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("start").c_str());
         // BGMを鳴らす
-        CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("main").c_str(), true);
+        CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("main").c_str());
     }),
                                       RemoveSelf::create(), // 自分を削除する
                                       NULL));
