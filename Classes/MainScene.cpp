@@ -9,6 +9,7 @@
 
 #include "MainScene.h"
 #include "TitleScene.h"
+#include "AudioUtils.h"
 
 USING_NS_CC;
 
@@ -178,9 +179,6 @@ void MainScene::onEnterTransitionDidFinish()
     // シーン遷移が完了したとき
     Layer::onEnterTransitionDidFinish();
     
-    // BGMを鳴らす
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
-    
     // 「READY」演出を行う
     this->addReadyLabel();
 }
@@ -217,7 +215,7 @@ void MainScene::update(float dt)
             auto winSize = Director::getInstance()->getWinSize();
             finish->setPosition(Vec2(winSize.width / 2.0, winSize.height / 2.0));
             finish->setScale(0);
-            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("finish.mp3");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("finish").c_str());
             
             // アクションの作成
             auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
@@ -289,10 +287,10 @@ Sprite* MainScene::addFruit()
     });
     auto playSound = CallFunc::create([fruitType] {
         if (fruitType == static_cast<int>(FruitType::GOLDEN)) {
-            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("golden.mp3");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("golden").c_str());
             
         } else if (fruitType == static_cast<int>(FruitType::BOMB)) {
-            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("bomb.mp3");
+            CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("bomb").c_str());
         }
     });
     fruit->runAction(Sequence::create(ScaleTo::create(0.25, 1),
@@ -326,18 +324,18 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
         case MainScene::FruitType::GOLDEN:
             // 黄金のフルーツのとき
             _score += 5;
-            audioEngine->playEffect("catch_golden.mp3");
+            audioEngine->playEffect(AudioUtils::getFileName("catch_golden").c_str());
             break;
         case MainScene::FruitType::BOMB:
             // 爆弾のとき
             this->onCatchBomb();
-            audioEngine->playEffect("catch_bomb.mp3");
+            audioEngine->playEffect(AudioUtils::getFileName("catch_bomb").c_str());
             this->addBombEffect(fruit->getPosition());
             break;
         default:
             // その他のフルーツのとき
             _score += 1;
-            audioEngine->playEffect("catch_fruit.mp3");
+            audioEngine->playEffect(AudioUtils::getFileName("catch_fruit").c_str());
             break;
     }
     
@@ -374,7 +372,9 @@ void MainScene::addReadyLabel()
                                       CallFunc::create([this, start] { // ラムダの中でthisとstart変数を使っているのでキャプチャに加える
         this->addChild(start); // 「スタート」のラベルを追加する（この時点でスタートのアニメーションが始まる）
         _state = GameState::PLAYING; // ゲーム状態をPLAYINGに切り替える
-        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("start.mp3");
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("start").c_str());
+        // BGMを鳴らす
+        CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("main").c_str(), true);
     }),
                                       RemoveSelf::create(), // 自分を削除する
                                       NULL));
@@ -390,7 +390,7 @@ void MainScene::onResult()
                                               "replay_button_pressed.png",
                                               [](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
-                                                  CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
+                                                  CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("decide").c_str());
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
                                                   Director::getInstance()->replaceScene(transition);
@@ -400,7 +400,7 @@ void MainScene::onResult()
                                              "title_button_pressed.png",
                                              [](Ref* ref) {
                                                  // 「タイトルへ戻る」ボタンを押したときの処理
-                                                 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
+                                                 CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("decide").c_str());
                                                  auto scene = TitleScene::createScene();
                                                  auto transition = TransitionCrossFade::create(0.5, scene);
                                                  Director::getInstance()->replaceScene(transition);
@@ -417,11 +417,11 @@ void MainScene::onResult()
     if (_score > highscore) {
         _highscoreLabel->setString(StringUtils::toString(_score));
         UserDefault::getInstance()->setIntegerForKey(HIGHSCORE_KEY, _score);
-        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("highscore.mp3");
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("highscore").c_str());
     }
     
     // BGMを鳴らす
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("result.mp3", true);
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("result").c_str(), true);
 }
 
 void MainScene::onCatchBomb()
@@ -446,7 +446,7 @@ void MainScene::onCatchBomb()
         }),
                                             NULL));
         _score = MAX(0, _score - BOMB_PENALTY_SCORE); // 0未満になったら0点にする
-        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("crash").c_str());
     }
 }
 
