@@ -50,16 +50,18 @@ Scene* MainScene::createScene()
     return scene;
 }
 
-MainScene::MainScene() :
-_score(0),
-_isCrash(false),
-_second(TIME_LIMIT_SECOND),
-_state(GameState::READY),
-_player(NULL),
-_secondLabel(NULL),
-_scoreLabel(NULL),
-_highscoreLabel(NULL),
-_fruitsBatchNode(NULL)
+MainScene::MainScene()
+: _score(0)
+,_isCrash(false)
+,_second(TIME_LIMIT_SECOND)
+,_state(GameState::READY)
+, _highScore(0)
+, _isHighScore(false)
+,_player(NULL)
+,_secondLabel(NULL)
+,_scoreLabel(NULL)
+,_highscoreLabel(NULL)
+,_fruitsBatchNode(NULL)
 {
     // 乱数の初期化
     std::random_device rdev;
@@ -159,6 +161,7 @@ bool MainScene::init()
     this->addChild(secondLabelHeader, ZOrderUI);
     
     // ハイスコアラベルの追加
+    // ハイスコアの取得
     auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
     auto highscoreLabel = Label::createWithSystemFont(StringUtils::toString(static_cast<int>(highscore)), "Marker Felt", 16);
     highscoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
@@ -166,6 +169,7 @@ bool MainScene::init()
     highscoreLabel->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 40));
     this->setHighscoreLabel(highscoreLabel);
     this->addChild(_highscoreLabel, ZOrderUI);
+    this->setHighScore(highscore);
     
     // ハイスコアヘッダーの追加
     auto highscoreLabelHeader = Label::createWithSystemFont("HIGHSCORE", "Marker Felt", 16);
@@ -178,6 +182,7 @@ bool MainScene::init()
     auto fruits = SpriteBatchNode::create("fruits.png");
     this->addChild(fruits);
     this->setFruitsBatchNode(fruits);
+    
     
     this->scheduleUpdate();
     
@@ -359,6 +364,13 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
             break;
     }
     
+    // ハイスコアの判定
+    if (_highScore > 0 && !_isHighScore && _score > _highScore) {
+        // ハイスコアを出したとき、1度だけSEをならす
+        _isHighScore = true;
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("highscore").c_str());
+    }
+    
     // フルーツの削除
     this->removeFruit(fruit);
     
@@ -437,7 +449,6 @@ void MainScene::onResult()
     if (_score > highscore) {
         _highscoreLabel->setString(StringUtils::toString(_score));
         UserDefault::getInstance()->setIntegerForKey(HIGHSCORE_KEY, _score);
-        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("highscore").c_str());
     }
     
     // BGMを鳴らす

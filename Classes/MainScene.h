@@ -61,10 +61,12 @@ public:
     void update(float dt);
     void onEnterTransitionDidFinish() override;
     CREATE_FUNC(MainScene);
-    CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
+    CC_SYNTHESIZE_PASS_BY_REF(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
     CC_SYNTHESIZE(int, _score, Score);
     CC_SYNTHESIZE(bool, _isCrash, IsCrash);
     CC_SYNTHESIZE(float, _second, Second);
+    CC_SYNTHESIZE(int, _highScore, HighScore);
+    CC_SYNTHESIZE(bool, _isHighScore, IsHighScore);
     CC_SYNTHESIZE(GameState, _state, State);
     CC_SYNTHESIZE(std::mt19937, _engine, Engine);
     CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);
