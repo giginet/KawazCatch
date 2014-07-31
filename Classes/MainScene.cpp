@@ -12,6 +12,8 @@
 #include "AudioUtils.h"
 
 USING_NS_CC;
+/// UI用Zオーダー
+const int ZOrderUI = 2;
 
 /// マージン
 const int FRUIT_TOP_MERGIN = 40;
@@ -78,9 +80,15 @@ bool MainScene::init()
     this->addChild(background);
     
     // プレイヤーを表示する
-    this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Vec2(size.width / 2.0, size.height - 445));
-    this->addChild(_player);
+    auto player = Sprite::create("player.png");
+    this->setPlayer(player);
+    
+    auto playerSize =player->getContentSize();
+    auto playerWidth = playerSize.width / 3.0;
+    player->setTextureRect(Rect(playerWidth, 0, playerWidth, playerSize.height));
+    
+    player->setPosition(Vec2(size.width / 2.0, size.height - 445));
+    this->addChild(player);
     
     // イベントリスナーの追加
     auto listener = EventListenerTouchOneByOne::create();
@@ -88,7 +96,7 @@ bool MainScene::init()
         // タッチされたとき
         return true;
     };
-    listener->onTouchMoved = [this, size](Touch* touch, Event* event) {
+    listener->onTouchMoved = [this, size, player, playerWidth, playerSize](Touch* touch, Event* event) {
         // タッチ位置が動いたとき
         if (!this->getIsCrash()) { // クラッシュしてないとき
             // 前回とのタッチ位置との差をベクトルで取得する
@@ -103,7 +111,19 @@ bool MainScene::init()
             // 画面外に飛び出していたら補正する
             newPosition = newPosition.getClampPoint(Vec2(0, position.y), Vec2(size.width, position.y));
             _player->setPosition(newPosition);
+            
+            // プレイヤーの移動方向によってグラを切り替える
+            if (delta.x > 0) {
+                player->setTextureRect(Rect(playerWidth * 2, 0, playerWidth, playerSize.height));
+            } else if (delta.x < 0) {
+                player->setTextureRect(Rect(0, 0, playerWidth, playerSize.height));
+            } else {
+                player->setTextureRect(Rect(playerWidth, 0, playerWidth, playerSize.height));
+            }
         }
+    };
+    listener->onTouchEnded = [player, playerWidth, playerSize](Touch* touch, Event* event) {
+        player->setTextureRect(Rect(playerWidth, 0, playerWidth, playerSize.height));
     };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
@@ -113,14 +133,14 @@ bool MainScene::init()
     scoreLabel->enableOutline(Color4B::BLACK, 1.5);
     this->setScoreLabel(scoreLabel);
     _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 40));
-    this->addChild(_scoreLabel);
+    this->addChild(_scoreLabel, ZOrderUI);
     
     // スコアヘッダーの追加
     auto scoreLabelHeader = Label::createWithSystemFont("SCORE", "Marker Felt", 16);
     scoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     scoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
     scoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 20));
-    this->addChild(scoreLabelHeader);
+    this->addChild(scoreLabelHeader, ZOrderUI);
     
     // タイマーラベルの追加
     _second = TIME_LIMIT_SECOND;
@@ -129,14 +149,14 @@ bool MainScene::init()
     secondLabel->enableOutline(Color4B::BLACK, 1.5);
     secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 40));
     this->setSecondLabel(secondLabel);
-    this->addChild(_secondLabel);
+    this->addChild(_secondLabel, ZOrderUI);
     
     // タイマーヘッダーの追加
     auto secondLabelHeader = Label::createWithSystemFont("TIME", "Marker Felt", 16);
     secondLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     secondLabelHeader->enableOutline(Color4B::BLACK, 1.5);
     secondLabelHeader->setPosition(Vec2(size.width / 2.0, size.height - 20));
-    this->addChild(secondLabelHeader);
+    this->addChild(secondLabelHeader, ZOrderUI);
     
     // ハイスコアラベルの追加
     auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
@@ -145,14 +165,14 @@ bool MainScene::init()
     highscoreLabel->enableOutline(Color4B::BLACK, 1.5);
     highscoreLabel->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 40));
     this->setHighscoreLabel(highscoreLabel);
-    this->addChild(_highscoreLabel);
+    this->addChild(_highscoreLabel, ZOrderUI);
     
     // ハイスコアヘッダーの追加
     auto highscoreLabelHeader = Label::createWithSystemFont("HIGHSCORE", "Marker Felt", 16);
     highscoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     highscoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
     highscoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 20));
-    this->addChild(highscoreLabelHeader);
+    this->addChild(highscoreLabelHeader, ZOrderUI);
     
     // BatchNodeの初期化
     auto fruits = SpriteBatchNode::create("fruits.png");
@@ -265,7 +285,7 @@ Sprite* MainScene::addFruit()
                                                    textureSize.height));
     fruit->setTag(fruitType);
     auto fruitSize = fruit->getContentSize();
-
+    
     float min = fruitSize.width / 2.0;
     float max = winSize.width - fruitSize.width / 2.0;
     float fruitXPos = generateRandom(min, max);
