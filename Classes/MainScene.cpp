@@ -422,6 +422,9 @@ void MainScene::onResult()
                                               "replay_button_pressed.png",
                                               [](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
+                                                  // BGMを停止する
+                                                  CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+                                                  // 決定音を鳴らす
                                                   CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("decide").c_str());
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
