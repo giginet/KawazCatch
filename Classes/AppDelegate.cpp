@@ -61,6 +61,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
         } else { // non-Retina 3.5インチ
             glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
         }
+    } else if (platform == Platform::OS_IPAD) {
+        addPath("bgm/caf");
+        addPath("se/caf");
+        if (frameSize.width > 512.f) {
+            director->setContentScaleFactor(2.0f);
+            searchResolutionOrder.push_back("images/retina");
+        } else {
+            searchResolutionOrder.push_back("images/nonretina");
+        }
+        glview->setDesignResolutionSize(320, 480, ResolutionPolicy::SHOW_ALL);
     } else if (platform == Platform::OS_ANDROID) {
         // Android端末のとき
         addPath("bgm/ogg");

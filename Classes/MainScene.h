@@ -61,17 +61,19 @@ public:
     void update(float dt);
     void onEnterTransitionDidFinish() override;
     CREATE_FUNC(MainScene);
-    CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
+    CC_SYNTHESIZE_PASS_BY_REF(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
     CC_SYNTHESIZE(int, _score, Score);
     CC_SYNTHESIZE(bool, _isCrash, IsCrash);
     CC_SYNTHESIZE(float, _second, Second);
+    CC_SYNTHESIZE(int, _highScore, HighScore);
+    CC_SYNTHESIZE(bool, _isHighScore, IsHighScore);
     CC_SYNTHESIZE(GameState, _state, State);
     CC_SYNTHESIZE(std::mt19937, _engine, Engine);
-    CC_SYNTHESIZE_RETAIN(cocos2d::SpriteBatchNode *, _fruitBatchNode, FruitsBatchNode);
+    CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);
     CC_SYNTHESIZE_RETAIN(cocos2d::Label *, _secondLabel, SecondLabel);
     CC_SYNTHESIZE_RETAIN(cocos2d::Label *, _highscoreLabel, HighscoreLabel);
     CC_SYNTHESIZE_RETAIN(cocos2d::Label *, _scoreLabel, ScoreLabel);
-    CC_SYNTHESIZE_RETAIN(cocos2d::Sprite *, _player, Player);
+    CC_SYNTHESIZE_RETAIN(cocos2d::SpriteBatchNode *, _fruitsBatchNode, FruitsBatchNode);
 private:
     /** 画面にフルーツを新たに配置して、それを返します
      *  @return 新たに作成されたフルーツ

@@ -12,6 +12,8 @@
 #include "AudioUtils.h"
 
 USING_NS_CC;
+/// UI用Zオーダー
+const int ZOrderUI = 2;
 
 /// マージン
 const int FRUIT_TOP_MERGIN = 40;
@@ -48,16 +50,18 @@ Scene* MainScene::createScene()
     return scene;
 }
 
-MainScene::MainScene() :
-_score(0),
-_isCrash(false),
-_second(TIME_LIMIT_SECOND),
-_state(GameState::READY),
-_player(NULL),
-_secondLabel(NULL),
-_scoreLabel(NULL),
-_highscoreLabel(NULL),
-_fruitBatchNode(NULL)
+MainScene::MainScene()
+: _score(0)
+,_isCrash(false)
+,_second(TIME_LIMIT_SECOND)
+,_state(GameState::READY)
+, _highScore(0)
+, _isHighScore(false)
+,_player(NULL)
+,_secondLabel(NULL)
+,_scoreLabel(NULL)
+,_highscoreLabel(NULL)
+,_fruitsBatchNode(NULL)
 {
     // 乱数の初期化
     std::random_device rdev;
@@ -78,9 +82,15 @@ bool MainScene::init()
     this->addChild(background);
     
     // プレイヤーを表示する
-    this->setPlayer(Sprite::create("player.png"));
-    _player->setPosition(Vec2(size.width / 2.0, size.height - 445));
-    this->addChild(_player);
+    auto player = Sprite::create("player.png");
+    this->setPlayer(player);
+    
+    auto playerSize =player->getContentSize();
+    auto playerWidth = playerSize.width / 3.0;
+    player->setTextureRect(Rect(playerWidth, 0, playerWidth, playerSize.height));
+    
+    player->setPosition(Vec2(size.width / 2.0, size.height - 445));
+    this->addChild(player);
     
     // イベントリスナーの追加
     auto listener = EventListenerTouchOneByOne::create();
@@ -88,7 +98,7 @@ bool MainScene::init()
         // タッチされたとき
         return true;
     };
-    listener->onTouchMoved = [this, size](Touch* touch, Event* event) {
+    listener->onTouchMoved = [this, size, player, playerWidth, playerSize](Touch* touch, Event* event) {
         // タッチ位置が動いたとき
         if (!this->getIsCrash()) { // クラッシュしてないとき
             // 前回とのタッチ位置との差をベクトルで取得する
@@ -103,7 +113,19 @@ bool MainScene::init()
             // 画面外に飛び出していたら補正する
             newPosition = newPosition.getClampPoint(Vec2(0, position.y), Vec2(size.width, position.y));
             _player->setPosition(newPosition);
+            
+            // プレイヤーの移動方向によってグラを切り替える
+            if (delta.x > 0) {
+                player->setTextureRect(Rect(playerWidth * 2, 0, playerWidth, playerSize.height));
+            } else if (delta.x < 0) {
+                player->setTextureRect(Rect(0, 0, playerWidth, playerSize.height));
+            } else {
+                player->setTextureRect(Rect(playerWidth, 0, playerWidth, playerSize.height));
+            }
         }
+    };
+    listener->onTouchEnded = [player, playerWidth, playerSize](Touch* touch, Event* event) {
+        player->setTextureRect(Rect(playerWidth, 0, playerWidth, playerSize.height));
     };
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
@@ -113,14 +135,14 @@ bool MainScene::init()
     scoreLabel->enableOutline(Color4B::BLACK, 1.5);
     this->setScoreLabel(scoreLabel);
     _scoreLabel->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 40));
-    this->addChild(_scoreLabel);
+    this->addChild(_scoreLabel, ZOrderUI);
     
     // スコアヘッダーの追加
     auto scoreLabelHeader = Label::createWithSystemFont("SCORE", "Marker Felt", 16);
     scoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     scoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
     scoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 1.5, size.height - 20));
-    this->addChild(scoreLabelHeader);
+    this->addChild(scoreLabelHeader, ZOrderUI);
     
     // タイマーラベルの追加
     _second = TIME_LIMIT_SECOND;
@@ -129,34 +151,38 @@ bool MainScene::init()
     secondLabel->enableOutline(Color4B::BLACK, 1.5);
     secondLabel->setPosition(Vec2(size.width / 2.0, size.height - 40));
     this->setSecondLabel(secondLabel);
-    this->addChild(_secondLabel);
+    this->addChild(_secondLabel, ZOrderUI);
     
     // タイマーヘッダーの追加
     auto secondLabelHeader = Label::createWithSystemFont("TIME", "Marker Felt", 16);
     secondLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     secondLabelHeader->enableOutline(Color4B::BLACK, 1.5);
     secondLabelHeader->setPosition(Vec2(size.width / 2.0, size.height - 20));
-    this->addChild(secondLabelHeader);
+    this->addChild(secondLabelHeader, ZOrderUI);
     
     // ハイスコアラベルの追加
+    // ハイスコアの取得
     auto highscore = UserDefault::getInstance()->getIntegerForKey(HIGHSCORE_KEY);
     auto highscoreLabel = Label::createWithSystemFont(StringUtils::toString(static_cast<int>(highscore)), "Marker Felt", 16);
     highscoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     highscoreLabel->enableOutline(Color4B::BLACK, 1.5);
     highscoreLabel->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 40));
     this->setHighscoreLabel(highscoreLabel);
-    this->addChild(_highscoreLabel);
+    this->addChild(_highscoreLabel, ZOrderUI);
+    this->setHighScore(highscore);
     
     // ハイスコアヘッダーの追加
     auto highscoreLabelHeader = Label::createWithSystemFont("HIGHSCORE", "Marker Felt", 16);
     highscoreLabelHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
     highscoreLabelHeader->enableOutline(Color4B::BLACK, 1.5);
     highscoreLabelHeader->setPosition(Vec2(size.width / 2.0 * 0.5, size.height - 20));
-    this->addChild(highscoreLabelHeader);
+    this->addChild(highscoreLabelHeader, ZOrderUI);
     
+    // BatchNodeの初期化
     auto fruits = SpriteBatchNode::create("fruits.png");
     this->addChild(fruits);
     this->setFruitsBatchNode(fruits);
+    
     
     this->scheduleUpdate();
     
@@ -166,11 +192,11 @@ bool MainScene::init()
 MainScene::~MainScene()
 {
     // デストラクタ
-    CC_SAFE_RELEASE_NULL(_fruitBatchNode);
     CC_SAFE_RELEASE_NULL(_player);
-    CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_secondLabel);
+    CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_highscoreLabel);
+    CC_SAFE_RELEASE_NULL(_fruitsBatchNode);
 }
 
 void MainScene::onEnterTransitionDidFinish()
@@ -191,7 +217,7 @@ void MainScene::update(float dt)
         float p = FRUIT_SPAWN_INCREASE_BASE * (1 + powf(FRUIT_SPAWN_INCREASE_RATE, pastTime));
         p = MIN(p, MAXIMUM_SPAWN_PROBABILITY); // pが最大値以上なら丸める
         float random = this->generateRandom(0, 1);
-        if (random < p) {
+        if (random < p && _second >= 5) {
             this->addFruit();
         }
         
@@ -253,9 +279,17 @@ Sprite* MainScene::addFruit()
     }
     
     // フルーツを作成する
-    const auto fruitSize = Size(32, 32);
-    auto fruit = Sprite::create("fruits.png", Rect(fruitType * fruitSize.width, 0, fruitSize.width, fruitSize.height));
+    // テクスチャのサイズを取り出す
+    auto textureSize = _fruitsBatchNode->getTextureAtlas()->getTexture()->getContentSize();
+    // テクスチャの横幅を個数で割った物がフルーツ1個の幅になる
+    auto fruitWidth = textureSize.width / static_cast<int>(FruitType::COUNT);
+    auto fruit = Sprite::create("fruits.png", Rect(fruitType *
+                                                   fruitWidth,
+                                                   0,
+                                                   fruitWidth,
+                                                   textureSize.height));
     fruit->setTag(fruitType);
+    auto fruitSize = fruit->getContentSize();
     
     float min = fruitSize.width / 2.0;
     float max = winSize.width - fruitSize.width / 2.0;
@@ -263,7 +297,7 @@ Sprite* MainScene::addFruit()
     
     fruit->setPosition(Vec2(fruitXPos,
                             winSize.height - FRUIT_TOP_MERGIN - fruitSize.height / 2.0));
-    _fruitBatchNode->addChild(fruit);
+    _fruitsBatchNode->addChild(fruit);
     _fruits.pushBack(fruit);
     
     // フルーツに動きをつける
@@ -330,6 +364,13 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit)
             break;
     }
     
+    // ハイスコアの判定
+    if (_highScore > 0 && !_isHighScore && _score > _highScore) {
+        // ハイスコアを出したとき、1度だけSEをならす
+        _isHighScore = true;
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("highscore").c_str());
+    }
+    
     // フルーツの削除
     this->removeFruit(fruit);
     
@@ -365,7 +406,7 @@ void MainScene::addReadyLabel()
         _state = GameState::PLAYING; // ゲーム状態をPLAYINGに切り替える
         CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("start").c_str());
         // BGMを鳴らす
-        CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("main").c_str(), true);
+        CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(AudioUtils::getFileName("main").c_str());
     }),
                                       RemoveSelf::create(), // 自分を削除する
                                       NULL));
@@ -381,6 +422,9 @@ void MainScene::onResult()
                                               "replay_button_pressed.png",
                                               [](Ref* ref) {
                                                   // 「もう一度遊ぶ」ボタンを押したときの処理
+                                                  // BGMを停止する
+                                                  CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
+                                                  // 決定音を鳴らす
                                                   CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("decide").c_str());
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
@@ -408,7 +452,6 @@ void MainScene::onResult()
     if (_score > highscore) {
         _highscoreLabel->setString(StringUtils::toString(_score));
         UserDefault::getInstance()->setIntegerForKey(HIGHSCORE_KEY, _score);
-        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(AudioUtils::getFileName("highscore").c_str());
     }
     
     // BGMを鳴らす
