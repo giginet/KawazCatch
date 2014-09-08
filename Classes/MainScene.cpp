@@ -464,7 +464,7 @@ void MainScene::onCatchBomb()
         _isCrash = true; // クラッシュ状態
         // アニメーションの作成
         Vector<SpriteFrame *> frames;
-        const auto playerSize = Size(85, 63);
+        const auto playerSize = _player->getContentSize();
         const int animationFrameCount = 3;
         for (int i = 0; i < animationFrameCount; ++i) {
             auto rect = Rect(playerSize.width * i, 0, playerSize.width, playerSize.height);
