@@ -64,7 +64,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     } else if (platform == Platform::OS_IPAD) {
         addPath("bgm/caf");
         addPath("se/caf");
-        if (frameSize.width > 512.f) {
+        if (frameSize.width > 1024.f) {
             director->setContentScaleFactor(2.0f);
             searchResolutionOrder.push_back("images/retina");
         } else {
