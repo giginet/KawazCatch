@@ -52,12 +52,12 @@ public:
      * @js NA
      * @lua NA
      */
-    virtual void scrollViewDidScroll(ScrollView* view) = 0;
+    virtual void scrollViewDidScroll(ScrollView* view) {};
     /**
      * @js NA
      * @lua NA
      */
-    virtual void scrollViewDidZoom(ScrollView* view) = 0;
+    virtual void scrollViewDidZoom(ScrollView* view) {};
 };
 
 
@@ -225,10 +225,11 @@ public:
      * @js NA
      * @lua NA
      */
-    virtual void visit(Renderer *renderer, const Mat4 &parentTransform, bool parentTransformUpdated) override;
+    virtual void visit(Renderer *renderer, const Mat4 &parentTransform, uint32_t parentFlags) override;
     
     using Node::addChild;
     virtual void addChild(Node * child, int zOrder, int tag) override;
+    virtual void addChild(Node * child, int zOrder, const std::string &name) override;
 
     /**
      * CCActionTweenDelegate

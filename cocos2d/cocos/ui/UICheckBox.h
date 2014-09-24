@@ -29,15 +29,17 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+class Sprite;
+
 namespace ui {
 
-CC_DEPRECATED_ATTRIBUTE typedef enum
+typedef enum
 {
     CHECKBOX_STATE_EVENT_SELECTED,
     CHECKBOX_STATE_EVENT_UNSELECTED
 }CheckBoxEventType;
 
-CC_DEPRECATED_ATTRIBUTE typedef void (Ref::*SEL_SelectedStateEvent)(Ref*,CheckBoxEventType);
+typedef void (Ref::*SEL_SelectedStateEvent)(Ref*,CheckBoxEventType);
 #define checkboxselectedeventselector(_SELECTOR) (SEL_SelectedStateEvent)(&_SELECTOR)
 
 /**
@@ -84,7 +86,7 @@ public:
      *
      * @param frontCrossDisabled    cross dark state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     static CheckBox* create(const std::string& backGround,
                             const std::string& backGroundSeleted,
@@ -104,7 +106,7 @@ public:
      *
      * @param frontCrossDisabled    cross dark state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTextures(const std::string& backGround,
                       const std::string& backGroundSelected,
@@ -118,7 +120,7 @@ public:
      *
      * @param backGround    backGround texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTextureBackGround(const std::string& backGround,TextureResType type = TextureResType::LOCAL);
 
@@ -127,7 +129,7 @@ public:
      *
      * @param backGroundSelected     backGround selected state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTextureBackGroundSelected(const std::string& backGroundSelected,TextureResType texType = TextureResType::LOCAL);
 
@@ -136,7 +138,7 @@ public:
      *
      * @param cross    cross texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTextureFrontCross(const std::string&,TextureResType texType = TextureResType::LOCAL);
 
@@ -145,7 +147,7 @@ public:
      *
      * @param backGroundDisabled    backGroundDisabled texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTextureBackGroundDisabled(const std::string& backGroundDisabled,TextureResType texType = TextureResType::LOCAL);
 
@@ -154,7 +156,7 @@ public:
      *
      * @param frontCrossDisabled    frontCrossDisabled texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTextureFrontCrossDisabled(const std::string& frontCrossDisabled,TextureResType texType = TextureResType::LOCAL);
 
@@ -170,14 +172,12 @@ public:
      *
      * @return selected    true that checkbox is selected, false otherwise.
      */
-    bool getSelectedState();
+    bool getSelectedState()const;
 
     //add a call back function would called when checkbox is selected or unselected.
     CC_DEPRECATED_ATTRIBUTE void addEventListenerCheckBox(Ref* target,SEL_SelectedStateEvent selector);
     void addEventListener(const ccCheckBoxCallback& callback);
 
-    //override "onTouchEnded" method of widget.
-    virtual void onTouchEnded(Touch *touch, Event *unusedEvent);
 
     //override "getVirtualRendererSize" method of widget.
     virtual const Size& getVirtualRendererSize() const override;
@@ -204,19 +204,23 @@ protected:
     virtual void onPressStateChangedToNormal() override;
     virtual void onPressStateChangedToPressed() override;
     virtual void onPressStateChangedToDisabled() override;
+    
     void selectedEvent();
     void unSelectedEvent();
+    
+    virtual void releaseUpEvent();
+    
     virtual void onSizeChanged() override;
-    virtual void updateTextureColor() override;
-    virtual void updateTextureOpacity() override;
-    virtual void updateTextureRGBA() override;
+  
     virtual void updateFlippedX() override;
     virtual void updateFlippedY() override;
+    
     void backGroundTextureScaleChangedWithSize();
     void backGroundSelectedTextureScaleChangedWithSize();
     void frontCrossTextureScaleChangedWithSize();
     void backGroundDisabledTextureScaleChangedWithSize();
     void frontCrossDisabledTextureScaleChangedWithSize();
+    
     virtual Widget* createCloneInstance() override;
     virtual void copySpecialProperties(Widget* model) override;
     virtual void adaptRenderers() override;

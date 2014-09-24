@@ -47,7 +47,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
             // Retinaディスプレイのとき
             // 高解像度画像を有効にする
             director->setContentScaleFactor(2.0f);
-            if (frameSize.height == 1136) {
+            if (frameSize.height >= 1136) {
                 // iPhone 4inchのとき
                 // 4インチ対応の画面サイズに変更する
                 glview->setDesignResolutionSize(320, 568, ResolutionPolicy::NO_BORDER);
@@ -75,7 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         // Android端末のとき
         addPath("bgm/ogg");
         addPath("se/ogg");
-        glview->setDesignResolutionSize(320, 480, ResolutionPolicy::NO_BORDER);
+        glview->setDesignResolutionSize(320, 568, ResolutionPolicy::SHOW_ALL);
     }
     searchResolutionOrder.push_back("images/nonretina");
     // 画像の読み込み順を設定する

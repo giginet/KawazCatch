@@ -29,14 +29,16 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
+class Sprite;
+
 namespace ui {
 
-CC_DEPRECATED_ATTRIBUTE typedef enum
+typedef enum
 {
     SLIDER_PERCENTCHANGED
 }SliderEventType;
 
-CC_DEPRECATED_ATTRIBUTE typedef void (Ref::*SEL_SlidPercentChangedEvent)(Ref*,SliderEventType);
+typedef void (Ref::*SEL_SlidPercentChangedEvent)(Ref*,SliderEventType);
 #define sliderpercentchangedselector(_SELECTOR) (SEL_SlidPercentChangedEvent)(&_SELECTOR)
 
 /**
@@ -74,7 +76,7 @@ public:
      *
      * @param fileName   file name of texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadBarTexture(const std::string& fileName,TextureResType texType = TextureResType::LOCAL);
     
@@ -85,7 +87,7 @@ public:
      */
     void setScale9Enabled(bool able);
     
-    bool isScale9Enabled();
+    bool isScale9Enabled()const;
     
     /**
      * Sets capinsets for slider, if slider is using scale9 renderer.
@@ -101,7 +103,7 @@ public:
      */
     void setCapInsetsBarRenderer(const Rect &capInsets);
     
-    const Rect& getCapInsetsBarRenderer();
+    const Rect& getCapInsetsBarRenderer()const;
     
     /**
      * Sets capinsets for slider, if slider is using scale9 renderer.
@@ -110,7 +112,7 @@ public:
      */
     void setCapInsetProgressBarRebderer(const Rect &capInsets);
     
-    const Rect& getCapInsetsProgressBarRebderer();
+    const Rect& getCapInsetsProgressBarRebderer()const;
     
     /**
      * Load textures for slider ball.
@@ -121,7 +123,7 @@ public:
      *
      * @param slider ball disabled    dark state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadSlidBallTextures(const std::string& normal,
                               const std::string& pressed,
@@ -133,7 +135,7 @@ public:
      *
      * @param normal    normal state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadSlidBallTextureNormal(const std::string& normal,TextureResType texType = TextureResType::LOCAL);
     
@@ -142,7 +144,7 @@ public:
      *
      * @param selected    selected state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadSlidBallTexturePressed(const std::string& pressed,TextureResType texType = TextureResType::LOCAL);
     
@@ -151,7 +153,7 @@ public:
      *
      * @param disabled    dark state texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadSlidBallTextureDisabled(const std::string& disabled,TextureResType texType = TextureResType::LOCAL);
     
@@ -160,7 +162,7 @@ public:
      *
      * @param fileName    file path of texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadProgressBarTexture(const std::string& fileName, TextureResType texType = TextureResType::LOCAL);
     
@@ -176,7 +178,7 @@ public:
      *
      * @return percent    percent value from 1 to 100.
      */
-    int getPercent();
+    int getPercent()const;
     
     /**
      * Add call back function called when slider's percent has changed to slider.
@@ -210,15 +212,13 @@ CC_CONSTRUCTOR_ACCESS:
 
 protected:
     virtual void initRenderer() override;
-    float getPercentWithBallPos(float location);
+    float getPercentWithBallPos(float location)const;
     void percentChangedEvent();
     virtual void onPressStateChangedToNormal() override;
     virtual void onPressStateChangedToPressed() override;
     virtual void onPressStateChangedToDisabled() override;
     virtual void onSizeChanged() override;
-    virtual void updateTextureColor() override;
-    virtual void updateTextureOpacity() override;
-    virtual void updateTextureRGBA() override;
+   
     void barRendererScaleChangedWithSize();
     void progressBarRendererScaleChangedWithSize();
     virtual Widget* createCloneInstance() override;
